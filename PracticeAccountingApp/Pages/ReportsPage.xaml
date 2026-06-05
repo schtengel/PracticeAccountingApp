@@ -1,0 +1,28 @@
+﻿<Page x:Class="PracticeAccountingApp.Pages.ReportsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Отчеты"
+                   FontSize="24"
+                   FontWeight="SemiBold"/>
+
+        <ListView Grid.Row="1"
+                  Margin="0,20,0,0">
+
+            <ListViewItem>Список студентов по группам</ListViewItem>
+            <ListViewItem>Список практик</ListViewItem>
+            <ListViewItem>Ведомости за период</ListViewItem>
+            <ListViewItem>Студенты по организациям</ListViewItem>
+
+        </ListView>
+
+    </Grid>
+
+</Page>

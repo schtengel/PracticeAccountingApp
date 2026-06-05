@@ -1,0 +1,229 @@
+﻿ <Window x:Class="PracticeAccountingApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Учет ведомостей по практикам"
+        Height="1080"
+        Width="1920"
+        MinHeight="500"
+        MinWidth="800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="#D9BC9A">
+
+    <Window.Resources>
+
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#403B35"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#595144"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#BF996A"/>
+        <SolidColorBrush x:Key="LightBrush" Color="#F5EFE6"/>
+
+        <Style x:Key="NavigationItemStyle"
+               TargetType="ListBoxItem">
+
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Margin" Value="10,4"/>
+            <Setter Property="Foreground" Value="{StaticResource LightBrush}"/>
+            <Setter Property="FontSize" Value="15"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="ListBoxItem">
+
+                        <Border x:Name="Border"
+                                Background="Transparent"
+                                CornerRadius="12">
+
+                            <ContentPresenter Margin="16,0"
+                                              VerticalAlignment="Center"/>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+
+                                <Setter TargetName="Border"
+                                        Property="Background"
+                                        Value="#595144"/>
+
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+
+                                <Setter TargetName="Border"
+                                        Property="Background"
+                                        Value="#4A443B"/>
+
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- БОКОВОЕ МЕНЮ -->
+
+        <Border Grid.Column="0"
+                Background="{StaticResource PrimaryBrush}">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- ЛОГО -->
+
+                <StackPanel Margin="20">
+
+                    <TextBlock Text="МЦПК"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource AccentBrush}"/>
+
+                    <TextBlock Text="Учет практик"
+                               FontSize="13"
+                               Foreground="{StaticResource LightBrush}"/>
+
+                </StackPanel>
+
+                <!-- НАВИГАЦИЯ -->
+
+                <ListBox Grid.Row="1"
+                         x:Name="NavigationMenu"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         ItemContainerStyle="{StaticResource NavigationItemStyle}"
+                         SelectionChanged="NavigationMenu_SelectionChanged">
+
+                    <ListBoxItem Tag="Pages/HomePage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏠"/>
+                            <TextBlock Text="Главная"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Tag="Pages/StudentsPage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🎓"/>
+                            <TextBlock Text="Студенты"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Tag="Pages/GroupsPage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👥"/>
+                            <TextBlock Text="Группы"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Tag="Pages/PracticesPage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📚"/>
+                            <TextBlock Text="Практики"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Tag="Pages/StatementsPage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📋"/>
+                            <TextBlock Text="Ведомости"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Tag="Pages/ReportsPage.xaml">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📄"/>
+                            <TextBlock Text="Отчеты"
+                                       Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                </ListBox>
+
+                <!-- НИЖНИЙ БЛОК -->
+
+                
+
+            </Grid>
+
+        </Border>
+
+        <!-- ОСНОВНАЯ ОБЛАСТЬ -->
+
+        <Grid Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+
+            <Border Background="#E3CCAF">
+
+                <Grid Margin="25,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Учет ведомостей по практикам"
+                               VerticalAlignment="Center"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="#403B35"/>
+
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <Label Content="Гость"
+                               FontSize="16"
+                               Margin="8 0"/>
+                        <Ellipse Width="36"
+                                 Height="36"
+                                 Fill="#403B35"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+            <!-- СТРАНИЦЫ -->
+
+            <Frame Grid.Row="1"
+                   x:Name="MainFrame"
+                   NavigationUIVisibility="Hidden"
+                   Background="#D9BC9A"/>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

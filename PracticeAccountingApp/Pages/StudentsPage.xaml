@@ -1,0 +1,62 @@
+﻿<Page x:Class="PracticeAccountingApp.Pages.StudentsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Студенты"
+                   FontSize="24"
+                   FontWeight="SemiBold"/>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,20,0,20">
+
+            <TextBox Width="250"
+                     Height="35"
+                     Margin="0,0,10,0"/>
+
+            <Button Content="Поиск"
+                    Width="100"
+                    Height="35"/>
+
+            <Button Content="Добавить"
+                    Width="120"
+                    Height="35"
+                    Margin="10,0,0,0"/>
+
+        </StackPanel>
+
+        <DataGrid Grid.Row="2"
+                  AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="№"
+                                    Width="70"/>
+
+                <DataGridTextColumn Header="Фамилия"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Имя"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Отчество"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Группа"
+                                    Width="150"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+    </Grid>
+
+</Page>

@@ -15,10 +15,6 @@
                        FontSize="24"
                        FontWeight="SemiBold"/>
 
-            <Button Content="Добавить группу"
-                    Width="150"
-                    HorizontalAlignment="Right"/>
-
         </DockPanel>
 
         <DataGrid Grid.Row="1"

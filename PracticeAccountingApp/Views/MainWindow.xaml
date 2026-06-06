@@ -77,8 +77,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- БОКОВОЕ МЕНЮ -->
-
         <Border Grid.Column="0"
                 Background="{StaticResource PrimaryBrush}">
 
@@ -89,8 +87,6 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
-                <!-- ЛОГО -->
 
                 <StackPanel Margin="20">
 
@@ -104,8 +100,6 @@
                                Foreground="{StaticResource LightBrush}"/>
 
                 </StackPanel>
-
-                <!-- НАВИГАЦИЯ -->
 
                 <ListBox Grid.Row="1"
                          x:Name="NavigationMenu"
@@ -164,7 +158,6 @@
 
                 </ListBox>
 
-                <!-- НИЖНИЙ БЛОК -->
 
                 
 
@@ -172,7 +165,6 @@
 
         </Border>
 
-        <!-- ОСНОВНАЯ ОБЛАСТЬ -->
 
         <Grid Grid.Column="1">
 
@@ -181,7 +173,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
 
             <Border Background="#E3CCAF">
 
@@ -202,20 +193,25 @@
                                 Orientation="Horizontal"
                                 VerticalAlignment="Center">
 
-                        <Label Content="Гость"
-                               FontSize="16"
+                        <Label FontSize="16"
                                Margin="8 0"/>
                         <Ellipse Width="36"
                                  Height="36"
-                                 Fill="#403B35"/>
+                                 Fill="#403B35">
+                           
+                        </Ellipse>
+
+                        <Button Content="> Выйти"
+                                Margin="16 0 0 0"
+                                Click="LogOutButton_Click">
+                            
+                        </Button>
 
                     </StackPanel>
 
                 </Grid>
 
             </Border>
-
-            <!-- СТРАНИЦЫ -->
 
             <Frame Grid.Row="1"
                    x:Name="MainFrame"

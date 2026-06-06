@@ -14,8 +14,6 @@
                 <RowDefinition Height="250"/>
             </Grid.RowDefinitions>
 
-            <!-- Заголовок -->
-
             <StackPanel>
 
                 <TextBlock Text="Главная"
@@ -30,7 +28,6 @@
 
             </StackPanel>
 
-            <!-- Карточки -->
 
             <UniformGrid Grid.Row="1"
                          Columns="4"
@@ -114,8 +111,6 @@
 
             </UniformGrid>
 
-            <!-- Последние ведомости -->
-
             <Border Grid.Row="2"
                     Background="White"
                     CornerRadius="16"
@@ -164,16 +159,12 @@
 
             </Border>
 
-            <!-- Нижние блоки -->
-
             <Grid Grid.Row="3">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-
-                <!-- Практики -->
 
                 <Border Grid.Column="0"
                         Background="White"
@@ -213,7 +204,6 @@
 
                 </Border>
 
-                <!-- Действия -->
 
                 <Border Grid.Column="1"
                         Background="White"

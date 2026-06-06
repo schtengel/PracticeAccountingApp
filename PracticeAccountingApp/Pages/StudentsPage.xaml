@@ -33,29 +33,24 @@
 
         </StackPanel>
 
-        <DataGrid Grid.Row="2"
-                  AutoGenerateColumns="False">
+        <ListView Grid.Row="2">
 
-            <DataGrid.Columns>
+            <ListView.ItemTemplate>
 
-                <DataGridTextColumn Header="№"
-                                    Width="70"/>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="№"/>
+                        <Label Content="ФИО"/>
+                        <Label Content="Группа"/>
+                        <Label Content="Дата рождения"/>
+                    </StackPanel>
 
-                <DataGridTextColumn Header="Фамилия"
-                                    Width="*"/>
+                    
+                    
+                </DataTemplate>
+            </ListView.ItemTemplate>
 
-                <DataGridTextColumn Header="Имя"
-                                    Width="*"/>
-
-                <DataGridTextColumn Header="Отчество"
-                                    Width="*"/>
-
-                <DataGridTextColumn Header="Группа"
-                                    Width="150"/>
-
-            </DataGrid.Columns>
-
-        </DataGrid>
+        </ListView>
 
     </Grid>
 

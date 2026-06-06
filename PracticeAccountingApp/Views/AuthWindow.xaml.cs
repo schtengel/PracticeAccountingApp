@@ -34,9 +34,14 @@ namespace PracticeAccountingApp.Views
             Close();
         }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e) 
+        private void LoginAsGuestButton_Click(object sender, RoutedEventArgs e) 
         {
-            Application.Current.Shutdown(); 
+            string login = "guest";
+            string password = "guest";
+
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            Close();
         }
     }
 }

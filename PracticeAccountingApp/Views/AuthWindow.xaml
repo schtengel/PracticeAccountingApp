@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Авторизация"
         Height="600"
-        Width="900"
+        Width="1000"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Background="#D9BC9A">
@@ -15,7 +15,6 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Левая информационная панель -->
 
         <Border Grid.Column="0"
                 Background="#403B35">
@@ -48,7 +47,6 @@
 
         </Border>
 
-        <!-- Правая часть -->
 
         <Grid Grid.Column="1">
 
@@ -114,14 +112,14 @@
                                 Click="LoginButton_Click"/>
 
                         <Button x:Name="ExitButton"
-                                Content="Выход"
+                                Content="Войти как гость"
                                 Height="45"
                                 Margin="0,10,0,0"
                                 FontSize="15"
-                                Background="#BF996A"
-                                Foreground="White"
+                                Foreground="#BF996A"
+                                Background="Transparent"
                                 BorderThickness="0"
-                                Click="ExitButton_Click"/>
+                                Click="LoginAsGuestButton_Click"/>
 
                     </StackPanel>
 

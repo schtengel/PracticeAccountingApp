@@ -9,17 +9,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Отчеты"
+        <TextBlock Text="Отчеты студентов"
                    FontSize="24"
                    FontWeight="SemiBold"/>
 
         <ListView Grid.Row="1"
                   Margin="0,20,0,0">
 
-            <ListViewItem>Список студентов по группам</ListViewItem>
-            <ListViewItem>Список практик</ListViewItem>
-            <ListViewItem>Ведомости за период</ListViewItem>
-            <ListViewItem>Студенты по организациям</ListViewItem>
+            <ListViewItem>Муслимов Эльмир Маратович</ListViewItem>
+            <ListViewItem>Михеев Самир Новерович</ListViewItem>
 
         </ListView>
 

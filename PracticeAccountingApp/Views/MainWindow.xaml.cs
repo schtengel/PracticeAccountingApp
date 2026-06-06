@@ -36,6 +36,13 @@ namespace PracticeAccountingApp.Views
                     UriKind.Relative));
             }
         }
+
+        private void LogOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            AuthWindow authWindow = new AuthWindow();
+            authWindow.Show();
+            Close();
+        }
     }
 }
 

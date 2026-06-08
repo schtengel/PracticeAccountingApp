@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PracticeAccountingApp.Models;
 
 namespace PracticeAccountingApp.Data;
 
-public partial class DbContext : DbContext
+public partial class AppDbContext : DbContext
 {
-    public DbContext()
+    public AppDbContext()
     {
     }
 
-    public DbContext(DbContextOptions<DbContext> options)
+    public AppDbContext(DbContextOptions<DbContext> options)
         : base(options)
     {
     }

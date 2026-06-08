@@ -14,6 +14,7 @@
                 <RowDefinition Height="250"/>
             </Grid.RowDefinitions>
 
+            <!-- HEADER -->
             <StackPanel>
 
                 <TextBlock Text="Главная"
@@ -28,94 +29,58 @@
 
             </StackPanel>
 
-
+            <!-- STATS -->
             <UniformGrid Grid.Row="1"
                          Columns="4"
                          Margin="0,25,0,25">
 
-                <Border Background="#403B35"
-                        CornerRadius="16"
-                        Margin="8">
-
+                <Border Background="#403B35" CornerRadius="16" Margin="8">
                     <StackPanel Margin="20">
-
-                        <TextBlock Text="Группы"
-                                   FontSize="14"
-                                   Foreground="#BF996A"/>
-
-                        <TextBlock Text="24"
+                        <TextBlock Text="Группы" Foreground="#BF996A"/>
+                        <TextBlock Text="{Binding GroupsCount}"
                                    FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="White"/>
-
                     </StackPanel>
-
                 </Border>
 
-                <Border Background="#403B35"
-                        CornerRadius="16"
-                        Margin="8">
-
+                <Border Background="#403B35" CornerRadius="16" Margin="8">
                     <StackPanel Margin="20">
-
-                        <TextBlock Text="Студенты"
-                                   FontSize="14"
-                                   Foreground="#BF996A"/>
-
-                        <TextBlock Text="380"
+                        <TextBlock Text="Студенты" Foreground="#BF996A"/>
+                        <TextBlock Text="{Binding StudentsCount}"
                                    FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="White"/>
-
                     </StackPanel>
-
                 </Border>
 
-                <Border Background="#403B35"
-                        CornerRadius="16"
-                        Margin="8">
-
+                <Border Background="#403B35" CornerRadius="16" Margin="8">
                     <StackPanel Margin="20">
-
-                        <TextBlock Text="Практики"
-                                   FontSize="14"
-                                   Foreground="#BF996A"/>
-
-                        <TextBlock Text="112"
+                        <TextBlock Text="Практики" Foreground="#BF996A"/>
+                        <TextBlock Text="{Binding PracticesCount}"
                                    FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="White"/>
-
                     </StackPanel>
-
                 </Border>
 
-                <Border Background="#403B35"
-                        CornerRadius="16"
-                        Margin="8">
-
+                <Border Background="#403B35" CornerRadius="16" Margin="8">
                     <StackPanel Margin="20">
-
-                        <TextBlock Text="Ведомости"
-                                   FontSize="14"
-                                   Foreground="#BF996A"/>
-
-                        <TextBlock Text="17"
+                        <TextBlock Text="Отчеты" Foreground="#BF996A"/>
+                        <TextBlock Text="{Binding ReportsCount}"
                                    FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="White"/>
-
                     </StackPanel>
-
                 </Border>
 
             </UniformGrid>
 
+            <!-- TABLE -->
             <Border Grid.Row="2"
                     Background="White"
                     CornerRadius="16"
-                    Padding="20"
-                    Margin="0,0,0,20">
+                    Padding="20">
 
                 <Grid>
 
@@ -132,23 +97,30 @@
                     <DataGrid Grid.Row="1"
                               Margin="0,15,0,0"
                               AutoGenerateColumns="False"
-                              RowHeight="35">
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              ItemsSource="{Binding LastStatements}">
 
                         <DataGrid.Columns>
 
                             <DataGridTextColumn Header="Группа"
+                                                Binding="{Binding GroupName}"
                                                 Width="120"/>
 
                             <DataGridTextColumn Header="Практика"
+                                                Binding="{Binding PracticeName}"
                                                 Width="*"/>
 
                             <DataGridTextColumn Header="Организация"
+                                                Binding="{Binding OrganizationName}"
                                                 Width="*"/>
 
                             <DataGridTextColumn Header="Дата"
+                                                Binding="{Binding Date, StringFormat=dd.MM.yyyy}"
                                                 Width="120"/>
 
                             <DataGridTextColumn Header="Статус"
+                                                Binding="{Binding Status}"
                                                 Width="120"/>
 
                         </DataGrid.Columns>
@@ -159,6 +131,7 @@
 
             </Border>
 
+            <!-- BOTTOM -->
             <Grid Grid.Row="3">
 
                 <Grid.ColumnDefinitions>
@@ -181,29 +154,15 @@
 
                         <TextBlock Text="Ближайшие практики"
                                    FontSize="18"
-                                   FontWeight="SemiBold"/>
+                                   FontWeight="SemiBold"
+                                   Foreground="#403B35"/>
 
                         <ListView Grid.Row="1"
-                                  Margin="0,15,0,0">
-
-                            <ListViewItem>
-                                ИС131 — Производственная практика
-                            </ListViewItem>
-
-                            <ListViewItem>
-                                ИС132 — Учебная практика
-                            </ListViewItem>
-
-                            <ListViewItem>
-                                ПБ141 — Производственная практика
-                            </ListViewItem>
-
-                        </ListView>
-
+                                  Margin="0,15,0,0"
+                                  ItemsSource="{Binding UpcomingPractices}"/>
                     </Grid>
 
                 </Border>
-
 
                 <Border Grid.Column="1"
                         Background="White"
@@ -220,29 +179,12 @@
 
                         <TextBlock Text="Последние действия"
                                    FontSize="18"
-                                   FontWeight="SemiBold"/>
+                                   FontWeight="SemiBold"
+                                   Foreground="#403B35"/>
 
                         <ListView Grid.Row="1"
-                                  Margin="0,15,0,0">
-
-                            <ListViewItem>
-                                Создана ведомость ИС131
-                            </ListViewItem>
-
-                            <ListViewItem>
-                                Добавлен студент Иванов И.И.
-                            </ListViewItem>
-
-                            <ListViewItem>
-                                Обновлена практика ПП-2026
-                            </ListViewItem>
-
-                            <ListViewItem>
-                                Добавлена организация ООО НМК
-                            </ListViewItem>
-
-                        </ListView>
-
+                                  Margin="0,15,0,0"
+                                  ItemsSource="{Binding LastActions}"/>
                     </Grid>
 
                 </Border>
@@ -254,4 +196,3 @@
     </ScrollViewer>
 
 </Page>
-

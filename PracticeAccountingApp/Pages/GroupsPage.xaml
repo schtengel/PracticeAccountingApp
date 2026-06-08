@@ -18,18 +18,22 @@
         </DockPanel>
 
         <DataGrid Grid.Row="1"
-                  AutoGenerateColumns="False">
+          ItemsSource="{Binding Groups}"
+          AutoGenerateColumns="False">
 
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="Код группы"
-                                    Width="200"/>
+                            Binding="{Binding GroupNumber}"
+                            Width="200"/>
 
                 <DataGridTextColumn Header="Специальность"
-                                    Width="*"/>
+                            Binding="{Binding Specialization}"
+                            Width="*"/>
 
                 <DataGridTextColumn Header="Количество студентов"
-                                    Width="200"/>
+                            Binding="{Binding StudentsCount}"
+                            Width="200"/>
 
             </DataGrid.Columns>
 

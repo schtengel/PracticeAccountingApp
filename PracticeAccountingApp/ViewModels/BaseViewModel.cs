@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PracticeAccountingApp.ViewModels
 {
-    internal class BaseViewModel
+    public class BaseViewModel : ObservableValidator
     {
     }
 }

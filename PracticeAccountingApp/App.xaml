@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:PracticeAccountingApp"
              StartupUri="Views/AuthWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Themes/GlobalStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

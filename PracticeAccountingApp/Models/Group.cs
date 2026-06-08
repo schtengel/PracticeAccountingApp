@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PracticeAccountingApp.Models;
+﻿namespace PracticeAccountingApp.Models;
 
 public partial class Group
 {

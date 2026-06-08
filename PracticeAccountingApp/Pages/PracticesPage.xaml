@@ -14,28 +14,35 @@
                    FontWeight="SemiBold"/>
 
         <DataGrid Grid.Row="1"
-                  Margin="0,20,0,0"
-                  AutoGenerateColumns="False">
+          Margin="0,20,0,0"
+          ItemsSource="{Binding Practices}"
+          AutoGenerateColumns="False">
 
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="№ п/п"
-                    Width="2*"/>
+                <DataGridTextColumn Header="№"
+                            Binding="{Binding Id}"
+                            Width="70"/>
 
                 <DataGridTextColumn Header="Вид практики"
-                    Width="2*"/>
+                            Binding="{Binding PracticeType}"
+                            Width="2*"/>
 
                 <DataGridTextColumn Header="Название"
-                                    Width="2*"/>
+                            Binding="{Binding Name}"
+                            Width="2*"/>
 
                 <DataGridTextColumn Header="Группа"
-                                    Width="*"/>
+                            Binding="{Binding Group}"
+                            Width="*"/>
 
                 <DataGridTextColumn Header="Дата начала"
-                                    Width="150"/>
+                            Binding="{Binding Start}"
+                            Width="150"/>
 
                 <DataGridTextColumn Header="Дата окончания"
-                                    Width="150"/>
+                            Binding="{Binding End}"
+                            Width="150"/>
 
             </DataGrid.Columns>
 

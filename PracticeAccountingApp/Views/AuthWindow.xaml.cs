@@ -1,47 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using PracticeAccountingApp.ViewModels;
 
-namespace PracticeAccountingApp.Views
+namespace PracticeAccountingApp.Views;
+
+public partial class AuthWindow
 {
-    /// <summary>
-    /// Логика взаимодействия для AuthWindow.xaml
-    /// </summary>
-    public partial class AuthWindow : Window
+    public AuthWindow()
     {
-        public AuthWindow()
-        {
-            InitializeComponent();
-        }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            string login = LoginTextBox.Text;
-            string password = PasswordBox.Password;
-
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
-        }
-
-        private void LoginAsGuestButton_Click(object sender, RoutedEventArgs e) 
-        {
-            string login = "guest";
-            string password = "guest";
-
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
-        }
+        InitializeComponent();
+        DataContext = new AuthViewModel();
     }
 }

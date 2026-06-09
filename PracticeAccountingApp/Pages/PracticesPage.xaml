@@ -1,53 +1,110 @@
 ﻿<Page x:Class="PracticeAccountingApp.Pages.PracticesPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="{StaticResource BackgroundBrush}">
 
     <Grid Margin="20">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- TITLE -->
         <TextBlock Text="Практики"
-                   FontSize="24"
-                   FontWeight="SemiBold"/>
+                   Style="{StaticResource PageTitleText}"/>
 
-        <DataGrid Grid.Row="1"
-          Margin="0,20,0,0"
-          ItemsSource="{Binding Practices}"
-          AutoGenerateColumns="False">
+        <!-- ACTION BAR -->
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,15">
 
-            <DataGrid.Columns>
+            <TextBox Width="260"
+                     
+         Style="{StaticResource InputBox}"
+         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTextColumn Header="№"
-                            Binding="{Binding Id}"
-                            Width="70"/>
+            <Button Content="Добавить"
+                    Margin="16 0"
+                    Width="100"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding OpenAddCommand}"/>
 
-                <DataGridTextColumn Header="Вид практики"
-                            Binding="{Binding PracticeType}"
-                            Width="2*"/>
+        </StackPanel>
 
-                <DataGridTextColumn Header="Название"
-                            Binding="{Binding Name}"
-                            Width="2*"/>
+        <!-- LIST -->
+        <ListView Grid.Row="2"
+                  ItemsSource="{Binding Practices}"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
-                <DataGridTextColumn Header="Группа"
-                            Binding="{Binding Group}"
-                            Width="*"/>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
 
-                <DataGridTextColumn Header="Дата начала"
-                            Binding="{Binding Start}"
-                            Width="150"/>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Margin" Value="8"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
 
-                <DataGridTextColumn Header="Дата окончания"
-                            Binding="{Binding End}"
-                            Width="150"/>
+            <ListView.ItemTemplate>
 
-            </DataGrid.Columns>
+                <DataTemplate>
 
-        </DataGrid>
+                    <Border Style="{StaticResource CardStyle}"
+                            Width="360"
+                            Height="160">
+
+                        <Border.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                          CommandParameter="{Binding}"/>
+                        </Border.InputBindings>
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextBrush}"/>
+
+                            <TextBlock Grid.Row="1"
+                                       Text="{Binding PracticeType}"
+                                       Foreground="{StaticResource MutedTextBrush}"/>
+
+                            <TextBlock Grid.Row="2"
+                                       Text="{Binding Group}"
+                                       Foreground="{StaticResource MutedTextBrush}"/>
+
+                            <!-- DELETE -->
+                            <Button Content="Удалить"
+                                    Style="{StaticResource GhostButton}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"/>
+
+                        </Grid>
+
+                    </Border>
+
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+
+        </ListView>
 
     </Grid>
-
 </Page>

@@ -38,7 +38,6 @@ public partial class MainWindow : Window
             "Pages/StudentsPage.xaml" => new StudentsPage(),
             "Pages/GroupsPage.xaml" => new GroupsPage(),
             "Pages/PracticesPage.xaml" => new PracticesPage(),
-            "Pages/StatementsPage.xaml" => new StatementsPage(),
             "Pages/ReportsPage.xaml" => new ReportsPage(),
             _ => new HomePage()
         };

@@ -11,63 +11,123 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- TITLE -->
         <TextBlock Text="Студенты"
-                   Style="{StaticResource PageTitle}"/>
+                   FontSize="26"
+                   FontWeight="SemiBold"
+                   Foreground="{StaticResource TextBrush}"/>
 
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    Margin="0,20,0,20">
+        <!-- SEARCH BAR -->
+        <Border Grid.Row="1"
+        Margin="0,20,0,20"
+        Background="{StaticResource SecondaryBrush}"
+        BorderBrush="{StaticResource BorderBrush}"
+        BorderThickness="1"
+        CornerRadius="10"
+        Padding="12">
 
-            <TextBox Width="250"
-                     Style="{StaticResource InputBox}"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal">
 
-            <Button Content="Поиск"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding SearchCommand}"/>
+                <!-- ПОЛЕ ПОИСКА (ВОЗВРАЩЕНО) -->
+                <TextBox Width="260"
+                 Style="{StaticResource InputBox}"
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Button Content="Добавить"
-                    Style="{StaticResource PrimaryButton}"
-                    Command="{Binding OpenAddCommand}"/>
+                <!-- КНОПКА ДОБАВИТЬ -->
+                <Button Content="Добавить"
+                Style="{StaticResource PrimaryButton}"
+                Width="100"
+                Margin="16,0,0,0"
+                Command="{Binding OpenAddCommand}"/>
 
-        </StackPanel>
+            </StackPanel>
 
+        </Border>
+
+        <!-- LIST -->
         <ListView Grid.Row="2"
-                  ItemsSource="{Binding Students}">
+                  ItemsSource="{Binding Students}"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  VirtualizingStackPanel.IsVirtualizing="False">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Top"/>
+                </Style>
+            </ListView.ItemContainerStyle>
 
             <ListView.ItemTemplate>
 
                 <DataTemplate>
 
-                    <Border Style="{StaticResource CardStyle}">
+                    <Border Width="340"
+                            Height="180"
+                            Padding="14"
+                            Background="{StaticResource SecondaryBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="12">
+
+                        <!-- ДВОЙНОЙ КЛИК = EDIT -->
+                        <Border.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                          CommandParameter="{Binding}"/>
+                        </Border.InputBindings>
 
                         <Grid>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="120"/>
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                            <TextBlock Text="{Binding FullName}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Group}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding BirthDate}"/>
+                            <!-- ID -->
+                            <TextBlock Text="{Binding Id}"
+                                       Foreground="{StaticResource AccentBrush}"
+                                       FontSize="12"/>
 
-                            <StackPanel Grid.Column="3"
-                                        Orientation="Horizontal">
+                            <!-- ФИО -->
+                            <TextBlock Grid.Row="1"
+                                       Text="{Binding FullName}"
+                                       Foreground="{StaticResource TextBrush}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Margin="0,6,0,0"/>
 
-                                <Button Content="✏"
-                                        Style="{StaticResource GhostButton}"
-                                        Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"/>
+                            <!-- ГРУППА -->
+                            <TextBlock Grid.Row="2"
+                                       Text="{Binding Group}"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       Margin="0,4,0,0"/>
 
-                                <Button Content="🗑"
-                                        Style="{StaticResource GhostButton}"
-                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"/>
+                            <!-- ДАТА -->
+                            <TextBlock Grid.Row="3"
+                                       Text="{Binding BirthDate, StringFormat='Дата рождения: {0:dd.MM.yyyy}'}"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       Margin="0,4,0,0"/>
 
-                            </StackPanel>
+                            <!-- УДАЛЕНИЕ -->
+                            <Button Content="Удалить"
+                                    Style="{StaticResource GhostButton}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"/>
 
                         </Grid>
 

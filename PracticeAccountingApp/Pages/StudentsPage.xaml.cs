@@ -1,15 +1,13 @@
 ﻿using System.Windows.Controls;
+using PracticeAccountingApp.ViewModels;
 
-namespace PracticeAccountingApp.Pages
+namespace PracticeAccountingApp.Pages;
+
+public partial class StudentsPage : Page
 {
-    /// <summary>
-    /// Логика взаимодействия для StudentsPage.xaml
-    /// </summary>
-    public partial class StudentsPage : Page
+    public StudentsPage()
     {
-        public StudentsPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        DataContext = new StudentsViewModel();
     }
 }

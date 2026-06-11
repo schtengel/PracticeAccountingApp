@@ -5,7 +5,7 @@
         Height="450"
         Width="500"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundBrush}">
+        Background="{StaticResource PrimaryBrush}">
 
     <Grid>
 

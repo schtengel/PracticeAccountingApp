@@ -230,12 +230,12 @@
     <!-- ====================== COMBOBOX ====================== -->
     <Style x:Key="ComboBoxInput" TargetType="ComboBox">
         <Setter Property="Height" Value="42"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-        <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="12,0"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
     <!-- ====================== SIDEBAR NAVIGATION ====================== -->

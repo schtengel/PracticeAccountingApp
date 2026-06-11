@@ -13,76 +13,74 @@
         <TextBlock Text="Ведомости практик" Style="{StaticResource PageTitleText}"/>
 
         <!-- Action Bar -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,24" Padding="18">
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="16">
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="360" Style="{StaticResource InputBox}"
+                <TextBox Width="380" Style="{StaticResource InputBox}"
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Button Content="Добавить ведомость" Margin="20,0,0,0"
+                <Button Content="Добавить ведомость" 
+                        Margin="20,0,0,0"
                         Style="{StaticResource PrimaryButton}"
-                        Command="{Binding OpenAddCommand}"/>
+                        Command="{Binding OpenAddCommand}"
+                        Visibility="{Binding CanManagePractices, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </StackPanel>
         </Border>
 
-        <!-- Card List -->
+        <!-- Табличный список с кнопками действий -->
         <ListView Grid.Row="2" ItemsSource="{Binding Practices}"
-                  Background="Transparent" BorderThickness="0">
+                  Background="{StaticResource PrimaryBrush}"
+                  BorderThickness="0">
 
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Тип практики" Width="220" DisplayMemberBinding="{Binding PracticeType}"/>
+                    <GridViewColumn Header="Модуль" Width="200" DisplayMemberBinding="{Binding ModuleName}"/>
+                    <GridViewColumn Header="Группа" Width="110" DisplayMemberBinding="{Binding Group}"/>
+                    <GridViewColumn Header="Преподаватель" Width="180" DisplayMemberBinding="{Binding TeacherName}"/>
+                    <GridViewColumn Header="Начало" Width="100" DisplayMemberBinding="{Binding Start, StringFormat=dd.MM.yyyy}"/>
+                    <GridViewColumn Header="Окончание" Width="100" DisplayMemberBinding="{Binding End, StringFormat=dd.MM.yyyy}"/>
 
+                    <!-- Колонка с действиями -->
+                    <GridViewColumn Header="Действия" Width="140">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <!-- Кнопка Изменить -->
+                                    <Button Content="Изменить" 
+                                            Style="{StaticResource SecondaryButton}"
+                                            Padding="8,4"
+                                            Margin="0,0,6,0"
+                                            Visibility="{Binding DataContext.CanManagePractices, 
+                                                        RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                        Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Command="{Binding DataContext.EditCommand, 
+                                                     RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"/>
+
+                                    <!-- Кнопка Удалить -->
+                                    <Button Content="Удалить" 
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="8,4"
+                                            Visibility="{Binding DataContext.CanManagePractices, 
+                                                        RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                        Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Command="{Binding DataContext.DeleteCommand, 
+                                                     RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+
+            <!-- Двойной клик для редактирования -->
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="10"/>
                     <Setter Property="Cursor" Value="Hand"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
                 </Style>
             </ListView.ItemContainerStyle>
-
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="390" Height="185" Style="{StaticResource CardStyle}" Padding="18">
-                        <!-- Double Click Edit -->
-                        <Border.InputBindings>
-                            <MouseBinding MouseAction="LeftDoubleClick"
-                                          Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                          CommandParameter="{Binding}"/>
-                        </Border.InputBindings>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="{Binding PracticeType}" FontSize="16.5" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextBrush}"/>
-                            <TextBlock Grid.Row="1" Text="{Binding ModuleName}" 
-                                       Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,2"/>
-                            <TextBlock Grid.Row="2" Text="{Binding Group}" FontWeight="Medium"
-                                       Foreground="{StaticResource AccentBrush}"/>
-
-                            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" 
-                                        VerticalAlignment="Bottom">
-                                <Button Content="Изменить" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
-                                        Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"/>
-                                <Button Content="Удалить" Style="{StaticResource GhostButton}"
-                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"/>
-                            </StackPanel>
-
-                            <TextBlock Grid.Row="3" Text="{Binding Start, StringFormat='с {0:dd.MM}'}"
-                                       Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Left"
-                                       VerticalAlignment="Bottom"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </Page>

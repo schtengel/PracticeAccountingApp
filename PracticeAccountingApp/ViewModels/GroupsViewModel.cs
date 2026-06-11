@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using PracticeAccountingApp.Models;
 using PracticeAccountingApp.Views.DialogWindows;
 using System.Collections.ObjectModel;
@@ -17,7 +18,7 @@ public partial class GroupsViewModel : BaseViewModel
         Load();
     }
 
-    private void Load()
+    public void Load()
     {
         Groups.Clear();
 
@@ -35,7 +36,7 @@ public partial class GroupsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void OpenAdd()
+    public void OpenAdd()
     {
         var win = new GroupEditWindow(null);
         win.ShowDialog();
@@ -43,19 +44,41 @@ public partial class GroupsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void Delete(GroupVm vm)
+    public void Edit(GroupVm vm)
     {
-        if (MessageBox.Show($"Удалить группу {vm.GroupNumber}?", "Подтверждение",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+        if (vm == null) return;
+
+        var win = new GroupEditWindow(vm.GroupNumber);
+        win.ShowDialog();
+        Load();
+    }
+
+    [RelayCommand]
+    public void Delete(GroupVm vm)
+    {
+        if (MessageBox.Show($"Удалить группу {vm.GroupNumber} и всех её студентов?\n\nЭто действие нельзя отменить.",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes)
             return;
 
-        var group = Db.Context.Groups.FirstOrDefault(g => g.GroupNumber == vm.GroupNumber);
+        var group = Db.Context.Groups
+            .Include(g => g.Students)
+            .FirstOrDefault(g => g.GroupNumber == vm.GroupNumber);
+
         if (group == null) return;
 
         Db.Context.Groups.Remove(group);
         Db.Context.SaveChanges();
         Load();
     }
+
+    // Права доступа
+    public bool CanManageGroupsAndStudents =>
+        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManageGroupsAndStudents;
+
+    public bool CanManagePractices =>
+        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
 }
 
 public class GroupVm

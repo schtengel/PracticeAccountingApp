@@ -95,6 +95,13 @@ public partial class StudentsViewModel : BaseViewModel
 
         Load();
     }
+
+    // Права доступа
+    public bool CanManageGroupsAndStudents =>
+        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManageGroupsAndStudents;
+
+    public bool CanManagePractices =>
+        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
 }
 
 public class StudentVm

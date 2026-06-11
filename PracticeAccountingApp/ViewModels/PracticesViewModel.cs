@@ -70,7 +70,7 @@ public partial class PracticesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void OpenAdd()
+    public void OpenAdd()         
     {
         var win = new PracticeEditWindow(null);
         win.ShowDialog();
@@ -78,16 +78,20 @@ public partial class PracticesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void Edit(PracticeVm vm)
+    public void Edit(PracticeVm vm)   
     {
+        if (vm == null) return;
+
         var win = new PracticeEditWindow(vm.Id);
         win.ShowDialog();
         Load();
     }
 
     [RelayCommand]
-    private void Delete(PracticeVm vm)
+    public void Delete(PracticeVm vm)  
     {
+        if (vm == null) return;
+
         if (MessageBox.Show($"Удалить ведомость для группы {vm.Group}?",
                 "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
             return;
@@ -99,6 +103,9 @@ public partial class PracticesViewModel : BaseViewModel
         Db.Context.SaveChanges();
         Practices.Remove(vm);
     }
+
+    public bool CanManagePractices =>
+    App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
 }
 
 public class PracticeVm

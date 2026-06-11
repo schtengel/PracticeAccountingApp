@@ -19,8 +19,10 @@
                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Button Content="Добавить студента" Margin="20,0,0,0"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding OpenAddCommand}"/>
+        Style="{StaticResource PrimaryButton}"
+        Command="{Binding OpenAddCommand}"
+        Visibility="{Binding CanManageGroupsAndStudents, 
+                    Converter={StaticResource BoolToVisibilityConverter}}"/>
             </StackPanel>
         </Border>
 
@@ -67,9 +69,9 @@
                                        Foreground="{StaticResource MutedTextBrush}" Margin="0,8,0,0"/>
 
                             <Button Content="Удалить" Style="{StaticResource GhostButton}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                    CommandParameter="{Binding}"/>
+                            Visibility="{Binding DataContext.CanManageGroupsAndStudents, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}"/>
                         </Grid>
                     </Border>
                 </DataTemplate>

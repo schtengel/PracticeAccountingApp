@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.EntityFrameworkCore;
 using PracticeAccountingApp.Models;
 using System;
 using System.Collections.ObjectModel;
@@ -37,8 +38,11 @@ public partial class HomeViewModel : BaseViewModel
         // 1. Последние ведомости → карточки
         // -------------------------
         var lastSheets = Db.Context.PracticeSheets
+            .Include(s => s.PracticeType)
+            .Include(s => s.Teacher)
             .OrderByDescending(x => x.PracticeSheetId)
             .Take(6)
+            .AsNoTracking()                    // важно для производительности
             .ToList();
 
         foreach (var sheet in lastSheets)
@@ -46,8 +50,8 @@ public partial class HomeViewModel : BaseViewModel
             LastStatements.Add(new StatementCardVm
             {
                 GroupName = sheet.GroupNumber,
-                PracticeName = sheet.PracticeType.PracticeTypeName,
-                TeacherName = sheet.Teacher.FullName,
+                PracticeName = sheet.PracticeType?.PracticeTypeName ?? "—",
+                TeacherName = sheet.Teacher?.FullName ?? "—",
                 Date = sheet.StartDate
             });
         }
@@ -59,9 +63,11 @@ public partial class HomeViewModel : BaseViewModel
         var monthAhead = DateOnly.FromDateTime(DateTime.Now.AddMonths(1));
 
         var upcoming = Db.Context.PracticeSheets
+            .Include(p => p.PracticeType)
             .Where(x => x.StartDate >= now && x.StartDate <= monthAhead)
             .OrderBy(x => x.StartDate)
             .Take(6)
+            .AsNoTracking()
             .ToList();
 
         foreach (var p in upcoming)
@@ -69,17 +75,18 @@ public partial class HomeViewModel : BaseViewModel
             UpcomingPractices.Add(new PracticeCardVm
             {
                 Group = p.GroupNumber,
-                PracticeName = p.PracticeType.PracticeTypeName,
+                PracticeName = p.PracticeType?.PracticeTypeName ?? "—",
                 StartDate = p.StartDate
             });
         }
 
         // -------------------------
-        // 3. Реальные "последние действия"
+        // 3. Последние действия
         // -------------------------
         var lastStudents = Db.Context.Students
             .OrderByDescending(x => x.StudentId)
             .Take(3)
+            .AsNoTracking()
             .ToList();
 
         foreach (var s in lastStudents)
@@ -88,13 +95,15 @@ public partial class HomeViewModel : BaseViewModel
         }
 
         var lastSheetsShort = Db.Context.PracticeSheets
+            .Include(s => s.PracticeType)
             .OrderByDescending(x => x.PracticeSheetId)
             .Take(3)
+            .AsNoTracking()
             .ToList();
 
         foreach (var s in lastSheetsShort)
         {
-            LastActions.Add($"Создана ведомость: {s.PracticeType.PracticeTypeName}");
+            LastActions.Add($"Создана ведомость: {s.PracticeType?.PracticeTypeName ?? "—"}");
         }
     }
 }

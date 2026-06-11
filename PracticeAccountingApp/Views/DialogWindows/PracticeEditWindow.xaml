@@ -1,63 +1,45 @@
 ﻿<Window x:Class="PracticeAccountingApp.Views.DialogWindows.PracticeEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Практика"
-        Height="500"
-        Width="500"
-        WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundBrush}">
+        Title="Редактирование практики" Height="720" Width="540"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource PrimaryBrush}">
 
-    <Border Margin="20"
-            Background="{StaticResource SecondaryBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
-            BorderThickness="1"
-            CornerRadius="16"
-            Padding="20">
+    <Border Margin="24" Background="{StaticResource SecondaryBrush}" 
+            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+            CornerRadius="16" Padding="32">
 
-        <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Практика" Style="{StaticResource SectionTitleText}"
+                           HorizontalAlignment="Center" Margin="0,0,0,24"/>
 
-            <TextBlock Text="Практика"
-                       HorizontalAlignment="Center"
-                       Style="{StaticResource PageTitleText}"
-                       FontSize="22"/>
+                <TextBlock Text="Тип практики" Margin="4,0,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <ComboBox ItemsSource="{Binding PracticeTypes}" Style="{StaticResource ComboBoxInput}"
+                          DisplayMemberPath="PracticeTypeName" SelectedItem="{Binding SelectedPracticeType}"/>
 
-            <!-- Тип / название -->
-            <TextBlock Text="Название"
-                       Margin="10"
-                       Foreground="{StaticResource MutedTextBrush}"/>
-            <TextBox Style="{StaticResource InputBox}"
-                     Text="{Binding Name}"/>
+                <TextBlock Text="Модуль" Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <ComboBox ItemsSource="{Binding Modules}" Style="{StaticResource ComboBoxInput}"
+                          DisplayMemberPath="ModuleName" SelectedItem="{Binding SelectedModule}"/>
 
-            <!-- Группа -->
-            <TextBlock Text="Группа"
-                       Foreground="{StaticResource MutedTextBrush}"
-                       Margin="10"/>
-            <ComboBox Style="{StaticResource ComboBoxInput}"
-                      ItemsSource="{Binding Groups}"
-                      SelectedItem="{Binding Group}"/>
+                <TextBlock Text="Преподаватель" Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <ComboBox ItemsSource="{Binding Teachers}" Style="{StaticResource ComboBoxInput}"
+                          DisplayMemberPath="FullName" SelectedItem="{Binding SelectedTeacher}"/>
 
-            <!-- Даты -->
-            <TextBlock Text="Начало"
-                       Foreground="{StaticResource MutedTextBrush}"
-                       Margin="10"/>
-            <TextBox Style="{StaticResource InputBox}"
-                     Text="{Binding StartString}"/>
+                <TextBlock Text="Группа" Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <ComboBox ItemsSource="{Binding Groups}" Style="{StaticResource ComboBoxInput}"
+                          DisplayMemberPath="GroupNumber" SelectedItem="{Binding SelectedGroup}"/>
 
-            <TextBlock Text="Окончание"
-                       Foreground="{StaticResource MutedTextBrush}"
-                       Margin="10"/>
-            <TextBox Style="{StaticResource InputBox}"
-                     Text="{Binding EndString}"/>
+                <TextBlock Text="Дата начала (дд.мм.гггг)" Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBox Style="{StaticResource InputBox}" Text="{Binding StartString}"/>
 
-            <Button Content="Сохранить"
-                    Margin="0 10"
+                <TextBlock Text="Дата окончания (дд.мм.гггг)" Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBox Style="{StaticResource InputBox}" Text="{Binding EndString}"/>
+
+                <Button Content="Сохранить" Margin="0,32,0,0" Height="46"
                         Style="{StaticResource PrimaryButton}"
                         Command="{Binding SaveCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
-
-
-        </StackPanel>
-
+            </StackPanel>
+        </ScrollViewer>
     </Border>
-
 </Window>

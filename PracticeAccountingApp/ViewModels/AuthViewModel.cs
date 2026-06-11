@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using PracticeAccountingApp.Models;
 using PracticeAccountingApp.Views;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,44 +14,43 @@ public partial class AuthViewModel : BaseViewModel
     [ObservableProperty]
     private string? login;
 
+    [ObservableProperty]
+    private string errorMessage = "";
+
+    [ObservableProperty]
+    private bool isLoading = false;
+
     [RelayCommand]
-    private void LoginUser(PasswordBox passwordBox)
+    private async Task LoginUser(PasswordBox passwordBox)
     {
         string password = passwordBox.Password;
+        ErrorMessage = "";
+        IsLoading = true;
 
-        if (string.IsNullOrWhiteSpace(Login) ||
-            string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(password))
         {
-            MessageBox.Show(
-                "Заполните логин и пароль",
-                "Ошибка",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-
+            ErrorMessage = "Заполните логин и пароль";
+            IsLoading = false;
             return;
         }
+
+        // Имитация задержки сети + плавность
+        await Task.Delay(400);
 
         User? user = Db.Context.Users
-            .FirstOrDefault(u =>
-                u.Login == Login &&
-                u.PasswordHash == password);
+            .Include(u => u.Role)
+            .FirstOrDefault(u => u.Login == Login);
 
-        if (user == null)
+        if (user == null || !PasswordHelper.VerifyPassword(password, user.PasswordHash))
         {
-            MessageBox.Show(
-                "Неверный логин или пароль",
-                "Ошибка",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-
+            ErrorMessage = "Неверный логин или пароль";
+            IsLoading = false;
             return;
         }
 
-        MessageBox.Show(
-            $"Добро пожаловать, {user.Login}",
-            "Успешный вход",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        // Успешный вход
+        ErrorMessage = "";
+        await ShowSuccessAnimation();
 
         OpenMainWindow(user);
     }
@@ -57,13 +58,20 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private void LoginAsGuest()
     {
+        ErrorMessage = "";
         OpenMainWindow(null);
+    }
+
+    private async Task ShowSuccessAnimation()
+    {
+        // Здесь можно добавить логику анимации через событие или Messenger,
+        // но для простоты просто небольшая задержка + сообщение
+        // (анимацию сделаем в XAML)
     }
 
     private static void OpenMainWindow(User? user)
     {
         MainWindow mainWindow = new(new MainViewModel(user));
-
         mainWindow.Show();
 
         Application.Current.Windows

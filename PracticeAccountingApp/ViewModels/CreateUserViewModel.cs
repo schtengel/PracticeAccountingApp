@@ -21,20 +21,32 @@ public partial class CreateUserViewModel : BaseViewModel
     [RelayCommand]
     private void CreateUser()
     {
-        if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password))
+        if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password) || SelectedRole == null)
+        {
+            MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
+        }
+
+        if (Db.Context.Users.Any(u => u.Login == Login))
+        {
+            MessageBox.Show("Пользователь с таким логином уже существует");
+            return;
+        }
 
         var user = new User
         {
-            Login = Login,
-            PasswordHash = Password,
-            RoleId = SelectedRole!.RoleId,
+            Login = Login.Trim(),
+            PasswordHash = PasswordHelper.HashPassword(Password),
+            RoleId = SelectedRole.RoleId,
             RegistrationDate = DateTime.Now
         };
 
         Db.Context.Users.Add(user);
         Db.Context.SaveChanges();
 
-        MessageBox.Show("Пользователь создан");
+        MessageBox.Show("Пользователь создан успешно");
+        // очистка полей
+        Login = Password = "";
+        SelectedRole = null;
     }
 }

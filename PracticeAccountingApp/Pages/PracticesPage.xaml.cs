@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using PracticeAccountingApp.ViewModels;
+using System.Windows.Controls;
 
 namespace PracticeAccountingApp.Pages
 {
@@ -10,6 +11,7 @@ namespace PracticeAccountingApp.Pages
         public PracticesPage()
         {
             InitializeComponent();
+            DataContext = new PracticesViewModel();
         }
     }
 }

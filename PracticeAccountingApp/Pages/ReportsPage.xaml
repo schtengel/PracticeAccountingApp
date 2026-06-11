@@ -1,26 +1,16 @@
 ﻿<Page x:Class="PracticeAccountingApp.Pages.ReportsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="{StaticResource PrimaryBrush}">
 
-    <Grid Margin="20">
+    <Grid Margin="28">
+        <TextBlock Text="Отчеты студентов" Style="{StaticResource PageTitleText}"/>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Text="Отчеты студентов"
-                   FontSize="24"
-                   FontWeight="SemiBold"/>
-
-        <ListView Grid.Row="1"
-                  Margin="0,20,0,0">
-
-            <ListViewItem>Муслимов Эльмир Маратович</ListViewItem>
-            <ListViewItem>Михеев Самир Новерович</ListViewItem>
-
-        </ListView>
-
+        <!-- Здесь будет полноценная таблица отчетов позже -->
+        <Border Style="{StaticResource CardStyle}" Margin="0,30,0,0" Padding="30">
+            <TextBlock Text="Раздел в разработке..." 
+                       FontSize="18" HorizontalAlignment="Center"
+                       Foreground="{StaticResource MutedTextBrush}"/>
+        </Border>
     </Grid>
-
 </Page>

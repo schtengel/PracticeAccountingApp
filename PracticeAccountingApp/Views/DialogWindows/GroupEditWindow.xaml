@@ -1,0 +1,46 @@
+﻿<Window x:Class="PracticeAccountingApp.Views.DialogWindows.GroupEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактирование группы"
+        Height="420" Width="520"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PrimaryBrush}"
+        ResizeMode="NoResize">
+
+    <Border Margin="24" Background="{StaticResource SecondaryBrush}"
+            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+            CornerRadius="16" Padding="32">
+
+        <StackPanel>
+            <TextBlock Text="Группа" 
+                       Style="{StaticResource SectionTitleText}"
+                       HorizontalAlignment="Center" Margin="0,0,0,24"/>
+
+            <!-- Номер группы -->
+            <TextBlock Text="Номер группы (например: ИС-131)" 
+                       Margin="4,0,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+            <TextBox Style="{StaticResource InputBox}"
+                     Text="{Binding GroupNumber}"/>
+
+            <!-- Специальность -->
+            <TextBlock Text="Специальность" 
+                       Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+            <TextBox Style="{StaticResource InputBox}"
+                     Text="{Binding Specialization}"/>
+
+            <!-- Курс -->
+            <TextBlock Text="Курс" 
+                       Margin="4,16,0,6" Foreground="{StaticResource MutedTextBrush}"/>
+            <ComboBox Style="{StaticResource ComboBoxInput}"
+                      ItemsSource="{Binding AvailableCourses}"
+                      SelectedItem="{Binding Course}"/>
+
+            <!-- Кнопка сохранения -->
+            <Button Content="Сохранить" 
+                    Margin="0,32,0,0" Height="46"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </StackPanel>
+    </Border>
+</Window>

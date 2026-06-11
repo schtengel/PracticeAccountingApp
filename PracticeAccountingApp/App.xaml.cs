@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.EntityFrameworkCore;
+using PracticeAccountingApp.Data;
+using System.Windows;
 
 namespace PracticeAccountingApp
 {
@@ -7,6 +9,18 @@ namespace PracticeAccountingApp
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            using (var db = new AppDbContext())
+            {
+                if (!db.Database.CanConnect())
+                {
+                    db.Database.EnsureCreated();
+                }
+            }
+
+            base.OnStartup(e);
+        }
     }
 
 }

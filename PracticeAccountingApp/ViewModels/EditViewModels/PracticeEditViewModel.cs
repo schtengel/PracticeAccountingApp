@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PracticeAccountingApp.Models;
-using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -12,21 +12,47 @@ public partial class PracticeEditViewModel : BaseViewModel
 {
     private readonly int? _id;
 
-    [ObservableProperty] private string name = "";
-    [ObservableProperty] private string group = "";
+    // выбранные объекты
+    [ObservableProperty] private PracticeType selectedPracticeType;
+    [ObservableProperty] private Module selectedModule;
+    [ObservableProperty] private Teacher selectedTeacher;
+    [ObservableProperty] private Group selectedGroup;
+
+    // даты
     [ObservableProperty] private string startString = "";
     [ObservableProperty] private string endString = "";
+
+    // коллекции
+    public ObservableCollection<PracticeType> PracticeTypes { get; } = new();
+    public ObservableCollection<Module> Modules { get; } = new();
+    public ObservableCollection<Teacher> Teachers { get; } = new();
+    public ObservableCollection<Group> Groups { get; } = new();
 
     public PracticeEditViewModel(int? id)
     {
         _id = id;
 
+        foreach (var item in Db.Context.PracticeTypes)
+            PracticeTypes.Add(item);
+
+        foreach (var item in Db.Context.Modules)
+            Modules.Add(item);
+
+        foreach (var item in Db.Context.Teachers)
+            Teachers.Add(item);
+
+        foreach (var item in Db.Context.Groups)
+            Groups.Add(item);
+
         if (id != null)
         {
             var p = Db.Context.PracticeSheets.First(x => x.PracticeSheetId == id);
 
-            Name = p.Module.ModuleName;
-            Group = p.GroupNumber;
+            SelectedPracticeType = p.PracticeType;
+            SelectedModule = p.Module;
+            SelectedTeacher = p.Teacher;
+            SelectedGroup = p.GroupNumberNavigation;
+
             StartString = p.StartDate.ToString("dd.MM.yyyy");
             EndString = p.EndDate.ToString("dd.MM.yyyy");
         }
@@ -56,7 +82,10 @@ public partial class PracticeEditViewModel : BaseViewModel
         {
             Db.Context.PracticeSheets.Add(new PracticeSheet
             {
-                GroupNumber = Group,
+                PracticeTypeId = SelectedPracticeType.PracticeTypeId,
+                ModuleId = SelectedModule.ModuleId,
+                TeacherId = SelectedTeacher.TeacherId,
+                GroupNumber = SelectedGroup.GroupNumber,
                 StartDate = start,
                 EndDate = end
             });
@@ -65,13 +94,15 @@ public partial class PracticeEditViewModel : BaseViewModel
         {
             var p = Db.Context.PracticeSheets.First(x => x.PracticeSheetId == _id);
 
-            p.GroupNumber = Group;
+            p.PracticeTypeId = SelectedPracticeType.PracticeTypeId;
+            p.ModuleId = SelectedModule.ModuleId;
+            p.TeacherId = SelectedTeacher.TeacherId;
+            p.GroupNumber = SelectedGroup.GroupNumber;
             p.StartDate = start;
             p.EndDate = end;
         }
 
         Db.Context.SaveChanges();
-
         window?.Close();
     }
 }

@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PracticeAccountingApp.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PracticeAccountingApp.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для GroupsPage.xaml
-    /// </summary>
     public partial class GroupsPage : Page
     {
         public GroupsPage()
         {
             InitializeComponent();
+            DataContext = new GroupsViewModel();
+        }
+
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListViewItem item && item.DataContext is GroupVm group)
+            {
+                var vm = (GroupsViewModel)DataContext;
+                vm.Edit(group);   // должно работать после того, как Edit сделан public
+            }
         }
     }
 }

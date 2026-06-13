@@ -1,48 +1,61 @@
-﻿
+﻿using PracticeAccountingApp.Pages;
+using PracticeAccountingApp.ViewModels;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PracticeAccountingApp.Views
+namespace PracticeAccountingApp.Views;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    private readonly MainViewModel _vm;
+
+    public MainWindow(MainViewModel vm)
     {
-        public string CurrentDate =>
-            DateTime.Now.ToString("dd.MM.yyyy");
+        InitializeComponent();
 
-        public MainWindow()
+        _vm = vm;
+        DataContext = _vm;
+
+        // стартовая страница
+        MainFrame.Navigate(new HomePage());
+
+        // выделить Home по умолчанию
+        NavigationMenu.SelectedIndex = 0;
+    }
+
+    private void NavigationMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (NavigationMenu.SelectedItem is not ListBoxItem item)
+            return;
+
+        string tag = item.Tag?.ToString() ?? "";
+
+        Page page = tag switch
         {
-            InitializeComponent();
+            "Pages/HomePage.xaml" => new HomePage(),
+            "Pages/StudentsPage.xaml" => new StudentsPage(),
+            "Pages/GroupsPage.xaml" => new GroupsPage(),
+            "Pages/PracticesPage.xaml" => new PracticesPage(),
+            "Pages/ReportsPage.xaml" => new ReportsPage(),
+            _ => new HomePage()
+        };
 
-            DataContext = this;
+        MainFrame.Navigate(page);
+    }
 
-            MainFrame.Navigate(
-                new Uri("Pages/HomePage.xaml",
-                UriKind.Relative));
+    private void LogOutButton_Click(object sender, RoutedEventArgs e)
+    {
+        var auth = new AuthWindow();
 
-            NavigationMenu.SelectedIndex = 0;
-        }
+        auth.Show();
 
-        private void NavigationMenu_SelectionChanged(
-            object sender,
-            SelectionChangedEventArgs e)
-        {
-            if (NavigationMenu.SelectedItem is ListBoxItem item)
-            {
-                string page = item.Tag.ToString();
+        Close();
+    }
 
-                MainFrame.Navigate(
-                    new Uri(page,
-                    UriKind.Relative));
-            }
-        }
-
-        private void LogOutButton_Click(object sender, RoutedEventArgs e)
-        {
-            AuthWindow authWindow = new AuthWindow();
-            authWindow.Show();
-            Close();
-        }
+    private void OpenCreateUser(object sender, RoutedEventArgs e)
+    {
+        new CreateUserWindow().ShowDialog();
     }
 }
-

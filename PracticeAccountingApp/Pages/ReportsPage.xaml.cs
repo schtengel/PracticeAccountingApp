@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using PracticeAccountingApp.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace PracticeAccountingApp.Pages
+namespace PracticeAccountingApp.Pages;
+
+public partial class ReportsPage : Page
 {
-    /// <summary>
-    /// Логика взаимодействия для ReportsPage.xaml
-    /// </summary>
-    public partial class ReportsPage : Page
+    public ReportsPage()
     {
-        public ReportsPage()
+        InitializeComponent();
+        DataContext = new ReportsViewModel();
+    }
+
+    private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is DataGridRow row && row.DataContext is ReportVm vm)
         {
-            InitializeComponent();
+            if (DataContext is ReportsViewModel model)
+                model.Edit(vm);
         }
     }
 }

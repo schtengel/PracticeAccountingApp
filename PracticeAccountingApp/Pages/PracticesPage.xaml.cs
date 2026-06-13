@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PracticeAccountingApp.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PracticeAccountingApp.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для PracticesPage.xaml
-    /// </summary>
     public partial class PracticesPage : Page
     {
         public PracticesPage()
         {
             InitializeComponent();
+            DataContext = new PracticesViewModel();
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row && row.DataContext is PracticeVm practice)
+            {
+                var vm = (PracticesViewModel)DataContext;
+                vm.Edit(practice);
+            }
         }
     }
 }

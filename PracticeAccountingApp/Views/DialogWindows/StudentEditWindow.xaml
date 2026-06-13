@@ -1,0 +1,44 @@
+﻿<Window x:Class="PracticeAccountingApp.Views.DialogWindows.StudentEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Студент"
+        Height="480" Width="480"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PrimaryBrush}">
+
+    <Border Margin="20" Background="{StaticResource SecondaryBrush}"
+            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+            CornerRadius="14" Padding="28">
+
+        <StackPanel>
+            <TextBlock Text="Данные студента"
+                       Style="{StaticResource SectionTitleText}"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,24"/>
+
+            <!-- ФИО -->
+            <TextBlock Text="ФИО" Style="{StaticResource LabelText}"/>
+            <TextBox Style="{StaticResource InputBox}"
+                     Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Группа -->
+            <TextBlock Text="Группа" Style="{StaticResource LabelText}" Margin="2,14,0,6"/>
+            <ComboBox Style="{StaticResource ComboBoxInput}"
+                      ItemsSource="{Binding Groups}"
+                      SelectedItem="{Binding Group}"/>
+
+            <!-- Дата рождения -->
+            <TextBlock Text="Дата рождения (дд.мм.гггг)"
+                       Style="{StaticResource LabelText}" Margin="2,14,0,6"/>
+            <TextBox Style="{StaticResource InputBox}"
+                     Text="{Binding BirthDateString, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button Content="Сохранить"
+                    Height="44" Margin="0,28,0,0"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </StackPanel>
+    </Border>
+</Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticeAccountingApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +11,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PracticeAccountingApp.Pages
+namespace PracticeAccountingApp.Views.DialogWindows
 {
     /// <summary>
-    /// Логика взаимодействия для StatementsPage.xaml
+    /// Логика взаимодействия для PracticeEditWindow.xaml
     /// </summary>
-    public partial class StatementsPage : Page
+    public partial class PracticeEditWindow : Window
     {
-        public StatementsPage()
+        public PracticeEditWindow(int? id)
         {
             InitializeComponent();
+            DataContext = new PracticeEditViewModel(id);
         }
     }
 }

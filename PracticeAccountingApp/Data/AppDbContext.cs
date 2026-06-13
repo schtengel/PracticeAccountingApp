@@ -171,6 +171,58 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK_Users_Roles");
         });
 
+        modelBuilder.Entity<Role>().HasData(
+            new Role { RoleId = 1, RoleName = "Администратор" },
+            new Role { RoleId = 2, RoleName = "Преподаватель" },
+            new Role { RoleId = 3, RoleName = "Пользователь" }
+        );
+
+        modelBuilder.Entity<PracticeType>().HasData(
+        new PracticeType { PracticeTypeId = 1, PracticeTypeName = "Учебная" },
+        new PracticeType { PracticeTypeId = 2, PracticeTypeName = "Производственная" },
+        new PracticeType { PracticeTypeId = 3, PracticeTypeName = "Преддипломная" }
+    );
+
+        modelBuilder.Entity<User>().HasData(
+        new User
+        {
+            UserId = 1,
+            Login = "admin",
+            PasswordHash = "admin", // Здесь должен быть реальный хэш
+            RoleId = 1
+        }
+    );
+
+        modelBuilder.Entity<Module>().HasData(
+    new Module { ModuleId = "MOD-EL01", ModuleName = "Электротехника и электроника" },
+    new Module { ModuleId = "MOD-EL02", ModuleName = "Электрические машины и аппараты" },
+    new Module { ModuleId = "MOD-EL03", ModuleName = "Релейная защита и автоматика" },
+    new Module { ModuleId = "MOD-EL04", ModuleName = "Электроснабжение предприятий" },
+    new Module { ModuleId = "MOD-G01", ModuleName = "Математика" },
+    new Module { ModuleId = "MOD-G02", ModuleName = "Информатика" },
+    new Module { ModuleId = "MOD-G03", ModuleName = "Английский язык в профессиональной деятельности" },
+    new Module { ModuleId = "MOD-G04", ModuleName = "Экономика организации" },
+    new Module { ModuleId = "MOD-G05", ModuleName = "Безопасность жизнедеятельности" },
+    new Module { ModuleId = "MOD-G06", ModuleName = "Правовое обеспечение профессиональной деятельности" },
+    new Module { ModuleId = "MOD-IT01", ModuleName = "Основы программирования" },
+    new Module { ModuleId = "MOD-IT02", ModuleName = "Объектно-ориентированное программирование" },
+    new Module { ModuleId = "MOD-IT03", ModuleName = "Базы данных и SQL" },
+    new Module { ModuleId = "MOD-IT04", ModuleName = "Веб-разработка (HTML, CSS, JavaScript)" },
+    new Module { ModuleId = "MOD-IT05", ModuleName = "Разработка backend-приложений (C#)" },
+    new Module { ModuleId = "MOD-IT06", ModuleName = "Веб-фреймворки и серверная разработка" },
+    new Module { ModuleId = "MOD-IT07", ModuleName = "Разработка мобильных приложений" },
+    new Module { ModuleId = "MOD-IT08", ModuleName = "Тестирование и отладка ПО" },
+    new Module { ModuleId = "MOD-MS01", ModuleName = "Технология машиностроения" },
+    new Module { ModuleId = "MOD-MS02", ModuleName = "Материаловедение" },
+    new Module { ModuleId = "MOD-MS03", ModuleName = "Черчение и инженерная графика" },
+    new Module { ModuleId = "MOD-MS04", ModuleName = "Метрология, стандартизация и сертификация" },
+    new Module { ModuleId = "MOD-MS05", ModuleName = "Автоматизация технологических процессов" },
+    new Module { ModuleId = "MOD-MS06", ModuleName = "Робототехника и мехатроника" },
+    new Module { ModuleId = "MOD-SV01", ModuleName = "Сварочное дело" },
+    new Module { ModuleId = "MOD-SV02", ModuleName = "Оборудование и технология сварки" },
+    new Module { ModuleId = "MOD-SV03", ModuleName = "Контроль качества сварных соединений" }
+);
+
         OnModelCreatingPartial(modelBuilder);
     }
 

@@ -32,9 +32,5 @@ public static class PasswordMigrationHelper
             db.SaveChanges();
             MessageBox.Show($"Успешно захэшировано {migrated} паролей!", "Миграция завершена");
         }
-        else
-        {
-            MessageBox.Show("Все пароли уже в зашифрованном виде.");
-        }
     }
 }

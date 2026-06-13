@@ -19,6 +19,8 @@ namespace PracticeAccountingApp
                 }
             }
 
+            PasswordMigrationHelper.MigrateAllPasswords();
+
             base.OnStartup(e);
         }
     }

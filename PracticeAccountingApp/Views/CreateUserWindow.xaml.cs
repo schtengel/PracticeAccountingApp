@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PracticeAccountingApp.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace PracticeAccountingApp.Views
+namespace PracticeAccountingApp.Views;
+
+public partial class CreateUserWindow : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для CreateUserWindow.xaml
-    /// </summary>
-    public partial class CreateUserWindow : Window
+    public CreateUserWindow()
     {
-        public CreateUserWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        DataContext = new CreateUserViewModel();
+    }
+
+    // PasswordBox не поддерживает двустороннюю привязку по соображениям безопасности,
+    // поэтому синхронизируем вручную через событие PasswordChanged.
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is CreateUserViewModel vm)
+            vm.Password = ((PasswordBox)sender).Password;
     }
 }

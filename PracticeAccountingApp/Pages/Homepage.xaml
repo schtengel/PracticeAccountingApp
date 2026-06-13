@@ -3,8 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Background="{StaticResource PrimaryBrush}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="28">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  Style="{StaticResource ModernScrollViewer}">
+        <Grid Margin="28,28,28,28">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -12,52 +13,71 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- HEADER -->
+            <!-- Заголовок -->
             <StackPanel Margin="0,0,0,24">
-                <TextBlock Text="Главная" Style="{StaticResource PageTitleText}"/>
-                <TextBlock Text="Обзор системы учета практик" 
-                           FontSize="15" Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBlock Text="Главная" Style="{StaticResource PageTitleText}" Margin="0"/>
+                <TextBlock Text="Обзор системы учёта практик"
+                           FontSize="14" 
+                           Foreground="{StaticResource MutedTextBrush}"/>
             </StackPanel>
 
-            <!-- STATISTICS -->
-            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,28">
-                <Border Style="{StaticResource CardStyle}" Margin="8" Padding="20">
+            <!-- Карточки статистики -->
+            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,24">
+
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,10,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Группы" FontSize="14" Foreground="{StaticResource AccentBrush}"/>
-                        <TextBlock Text="{Binding GroupsCount}" FontSize="36" FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBrush}" Margin="0,8,0,0"/>
+                        <TextBlock Text="👥" FontSize="22" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding GroupsCount}"
+                                   FontSize="38" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Групп"
+                                   FontSize="13" Margin="0,4,0,0"
+                                   Foreground="{StaticResource MutedTextBrush}"/>
                     </StackPanel>
                 </Border>
 
-                <Border Style="{StaticResource CardStyle}" Margin="8" Padding="20">
+                <Border Style="{StaticResource CardStyle}" Margin="5,0,5,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Студенты" FontSize="14" Foreground="{StaticResource AccentBrush}"/>
-                        <TextBlock Text="{Binding StudentsCount}" FontSize="36" FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBrush}" Margin="0,8,0,0"/>
+                        <TextBlock Text="🎓" FontSize="22" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding StudentsCount}"
+                                   FontSize="38" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Студентов"
+                                   FontSize="13" Margin="0,4,0,0"
+                                   Foreground="{StaticResource MutedTextBrush}"/>
                     </StackPanel>
                 </Border>
 
-                <Border Style="{StaticResource CardStyle}" Margin="8" Padding="20">
+                <Border Style="{StaticResource CardStyle}" Margin="5,0,5,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Ведомости" FontSize="14" Foreground="{StaticResource AccentBrush}"/>
-                        <TextBlock Text="{Binding PracticesCount}" FontSize="36" FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBrush}" Margin="0,8,0,0"/>
+                        <TextBlock Text="📚" FontSize="22" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding PracticesCount}"
+                                   FontSize="38" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Ведомостей"
+                                   FontSize="13" Margin="0,4,0,0"
+                                   Foreground="{StaticResource MutedTextBrush}"/>
                     </StackPanel>
                 </Border>
 
-                <Border Style="{StaticResource CardStyle}" Margin="8" Padding="20">
+                <Border Style="{StaticResource CardStyle}" Margin="10,0,0,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Отчеты" FontSize="14" Foreground="{StaticResource AccentBrush}"/>
-                        <TextBlock Text="{Binding ReportsCount}" FontSize="36" FontWeight="Bold" 
-                                   Foreground="{StaticResource TextBrush}" Margin="0,8,0,0"/>
+                        <TextBlock Text="📄" FontSize="22" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding ReportsCount}"
+                                   FontSize="38" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Отчётов"
+                                   FontSize="13" Margin="0,4,0,0"
+                                   Foreground="{StaticResource MutedTextBrush}"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
-            <!-- LAST STATEMENTS -->
-            <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,24" Padding="20">
+            <!-- Последние ведомости -->
+            <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="Последние ведомости" Style="{StaticResource SectionTitleText}"/>
+                    <TextBlock Text="Последние ведомости"
+                               Style="{StaticResource SectionTitleText}"/>
                     <ItemsControl ItemsSource="{Binding LastStatements}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -66,17 +86,26 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="255" Height="138" Margin="8" 
-                                        Background="{StaticResource PrimaryBrush}"
+                                <Border Width="240" Margin="0,0,12,12"
+                                        Background="{StaticResource SurfaceBrush}"
                                         BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                                        CornerRadius="14" Padding="16">
+                                        CornerRadius="12" Padding="16">
                                     <StackPanel>
-                                        <TextBlock Text="{Binding GroupName}" Foreground="{StaticResource AccentBrush}" FontSize="13"/>
-                                        <TextBlock Text="{Binding PracticeName}" FontWeight="SemiBold" 
-                                                   FontSize="15" Margin="0,8,0,4" Foreground="{StaticResource TextBrush}"/>
-                                        <TextBlock Text="{Binding TeacherName}" Foreground="{StaticResource MutedTextBrush}"/>
-                                        <TextBlock Text="{Binding Date, StringFormat='dd.MM.yyyy'}" 
-                                                   Foreground="{StaticResource MutedTextBrush}" Margin="0,6,0,0"/>
+                                        <Border Style="{StaticResource BadgeStyle}" Margin="0,0,0,10">
+                                            <TextBlock Text="{Binding GroupName}"
+                                                       Style="{StaticResource BadgeText}"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding PracticeName}"
+                                                   FontWeight="SemiBold" FontSize="14"
+                                                   Foreground="{StaticResource TextBrush}"
+                                                   TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding TeacherName}"
+                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                   FontSize="13" Margin="0,6,0,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Date, StringFormat='dd.MM.yyyy'}"
+                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                   FontSize="12" Margin="0,4,0,0"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
@@ -85,35 +114,45 @@
                 </StackPanel>
             </Border>
 
-            <!-- BOTTOM SECTION -->
+            <!-- Нижняя секция: ближайшие + действия -->
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- UPCOMING -->
-                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0" Padding="20">
+                <!-- Ближайшие практики -->
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,12,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Ближайшие практики" Style="{StaticResource SectionTitleText}"/>
+                        <TextBlock Text="Ближайшие практики (30 дней)"
+                                   Style="{StaticResource SectionTitleText}"/>
                         <ItemsControl ItemsSource="{Binding UpcomingPractices}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Width="235" Height="105" Margin="6" 
-                                            Background="{StaticResource PrimaryBrush}"
+                                    <Border Margin="0,0,0,8" Padding="14,12"
+                                            Background="{StaticResource SurfaceBrush}"
                                             BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                                            CornerRadius="12" Padding="14">
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding PracticeName}" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
-                                            <TextBlock Text="{Binding Group}" Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,0"/>
-                                            <TextBlock Text="{Binding StartDate, StringFormat='dd.MM.yyyy'}" 
-                                                       Foreground="{StaticResource AccentBrush}" Margin="0,8,0,0"/>
-                                        </StackPanel>
+                                            CornerRadius="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding PracticeName}"
+                                                           FontWeight="SemiBold" FontSize="14"
+                                                           Foreground="{StaticResource TextBrush}"/>
+                                                <TextBlock Text="{Binding Group}"
+                                                           FontSize="13"
+                                                           Foreground="{StaticResource MutedTextBrush}"
+                                                           Margin="0,3,0,0"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="1" Style="{StaticResource BadgeStyle}"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding StartDate, StringFormat='dd.MM.yyyy'}"
+                                                           Style="{StaticResource BadgeText}"/>
+                                            </Border>
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -121,12 +160,30 @@
                     </StackPanel>
                 </Border>
 
-                <!-- LAST ACTIONS -->
+                <!-- Последние действия — исправлен ItemTemplate -->
                 <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="12,0,0,0" Padding="20">
                     <StackPanel>
-                        <TextBlock Text="Последние действия" Style="{StaticResource SectionTitleText}"/>
-                        <ListView ItemsSource="{Binding LastActions}" Background="Transparent" 
-                                  BorderThickness="0" Margin="0,8,0,0"/>
+                        <TextBlock Text="Последние действия"
+                                   Style="{StaticResource SectionTitleText}"/>
+                        <ItemsControl ItemsSource="{Binding LastActions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0,10"
+                                            BorderBrush="{StaticResource DividerBrush}"
+                                            BorderThickness="0,0,0,1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="6" Height="6" Margin="0,0,10,0"
+                                                     Fill="{StaticResource AccentBrush}"
+                                                     VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding}"
+                                                       FontSize="13"
+                                                       Foreground="{StaticResource TextBrush}"
+                                                       TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </Border>
             </Grid>

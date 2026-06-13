@@ -6,6 +6,8 @@
         MinHeight="650" MinWidth="1100"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
         Background="{StaticResource PrimaryBrush}">
 
     <Window.Resources>
@@ -14,13 +16,15 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="268"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SIDEBAR -->
-        <Border Grid.Column="0" Background="{StaticResource SecondaryBrush}" 
-                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+        <!-- ═══ SIDEBAR ═══ -->
+        <Border Grid.Column="0"
+                Background="{StaticResource SecondaryBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,1,0">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -29,100 +33,163 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- LOGO -->
-                <StackPanel Margin="28,32,28,20">
-                    <TextBlock Text="МЦПК" FontSize="42" FontWeight="Bold" 
+                <!-- Logo -->
+                <StackPanel Margin="24,28,24,20">
+                    <TextBlock Text="МЦПК"
+                               FontSize="38" FontWeight="Bold"
                                Foreground="{StaticResource AccentBrush}"/>
-                    <TextBlock Text="Учет практик" FontSize="15" Margin="2,4,0,0"
+                    <TextBlock Text="Учёт практик"
+                               FontSize="13" Margin="2,4,0,0"
                                Foreground="{StaticResource MutedTextBrush}"/>
                 </StackPanel>
 
-                <!-- NAVIGATION -->
-                <ListBox Grid.Row="1" x:Name="NavigationMenu" Margin="12,0"
-                         Background="Transparent" BorderThickness="0"
+                <!-- Divider -->
+                <Border Grid.Row="0" Height="1" VerticalAlignment="Bottom"
+                        Margin="16,0" Background="{StaticResource DividerBrush}"/>
+
+                <!-- Navigation -->
+                <ListBox Grid.Row="1"
+                         x:Name="NavigationMenu"
+                         Margin="10,12,10,0"
+                         Background="Transparent"
+                         BorderThickness="0"
                          ItemContainerStyle="{StaticResource NavigationItemStyle}"
                          SelectionChanged="NavigationMenu_SelectionChanged">
 
                     <ListBoxItem Tag="Pages/HomePage.xaml">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🏠" FontSize="18"/>
-                            <TextBlock Text="Главная" FontSize="17" Margin="14,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="🏠" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Главная" FontSize="15" Margin="12,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
+
                     <ListBoxItem Tag="Pages/StudentsPage.xaml">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🎓" FontSize="18"/>
-                            <TextBlock Text="Студенты" FontSize="17" Margin="14,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="🎓" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Студенты" FontSize="15" Margin="12,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
+
                     <ListBoxItem Tag="Pages/GroupsPage.xaml">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="👥" FontSize="18"/>
-                            <TextBlock Text="Группы" FontSize="17" Margin="14,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="👥" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Группы" FontSize="15" Margin="12,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
+
                     <ListBoxItem Tag="Pages/PracticesPage.xaml">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📚" FontSize="18"/>
-                            <TextBlock Text="Ведомости" FontSize="17" Margin="14,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="📚" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Ведомости" FontSize="15" Margin="12,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
+
                     <ListBoxItem Tag="Pages/ReportsPage.xaml">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📄" FontSize="18"/>
-                            <TextBlock Text="Отчеты" FontSize="17" Margin="14,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="📄" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Отчёты" FontSize="15" Margin="12,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>
 
-                <!-- USER PANEL -->
-                <Border Grid.Row="2" Margin="20" Padding="16"
+                <!-- User Panel -->
+                <Border Grid.Row="2" Margin="14,0,14,16" Padding="14,12"
                         Background="{StaticResource PrimaryBrush}"
                         BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                         CornerRadius="12">
-                    <StackPanel>
-                        <TextBlock Text="Текущий пользователь" FontWeight="SemiBold"
-                                   Foreground="{StaticResource TextBrush}"/>
-                        <TextBlock Text="{Binding CurrentUser.Login}" Margin="0,6,0,0"
-                                   Foreground="{StaticResource MutedTextBrush}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel VerticalAlignment="Center">
+                            <!-- Гость или логин -->
+                            <TextBlock FontWeight="SemiBold" FontSize="14"
+                                       Foreground="{StaticResource TextBrush}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding CurrentUser.Login}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGuest}" Value="True">
+                                                <Setter Property="Text" Value="Гость"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Роль -->
+                            <TextBlock FontSize="12" Margin="0,3,0,0"
+                                       Foreground="{StaticResource MutedTextBrush}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding CurrentUser.Role.RoleName}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGuest}" Value="True">
+                                                <Setter Property="Text" Value="Без авторизации"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- Иконка пользователя -->
+                        <Border Grid.Column="1" Width="34" Height="34"
+                                Background="{StaticResource AccentLightBrush}"
+                                CornerRadius="17"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="👤" FontSize="14"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>
 
-        <!-- MAIN CONTENT -->
+        <!-- ═══ MAIN AREA ═══ -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="80"/>
+                <RowDefinition Height="68"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- TOP BAR -->
-            <Border Grid.Row="0" Background="{StaticResource SecondaryBrush}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
-                <Grid Margin="32,0">
-                    <TextBlock Text="Учет ведомостей по практикам"
+            <!-- Top Bar -->
+            <Border Grid.Row="0"
+                    Background="{StaticResource SecondaryBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,0,0,1">
+                <Grid Margin="28,0">
+                    <TextBlock Text="Учёт ведомостей по практикам"
                                VerticalAlignment="Center"
-                               FontSize="26" FontWeight="SemiBold"
+                               FontSize="20" FontWeight="SemiBold"
                                Foreground="{StaticResource TextBrush}"/>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <Button Content="Создать пользователя" Width="170"
+
+                        <Button Content="＋ Создать пользователя"
                                 Style="{StaticResource SecondaryButton}"
                                 Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVisibilityConverter}}"
-                                Click="OpenCreateUser" Margin="0,0,12,0"/>
+                                Click="OpenCreateUser"
+                                Margin="0,0,10,0"/>
 
-                        <Button Content="Выйти" Width="110"
-                                Style="{StaticResource SecondaryButton}"
+                        <Button Content="Выйти"
+                                Style="{StaticResource GhostButton}"
                                 Click="LogOutButton_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- PAGE CONTENT -->
-            <Border Grid.Row="1" Margin="24" Background="{StaticResource PrimaryBrush}"
-                    CornerRadius="16" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <!-- Page Frame -->
+            <Border Grid.Row="1" Margin="20"
+                    Background="{StaticResource PrimaryBrush}"
+                    CornerRadius="14"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
                 <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
             </Border>
         </Grid>

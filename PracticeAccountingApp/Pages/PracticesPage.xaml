@@ -3,84 +3,116 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Background="{StaticResource PrimaryBrush}">
 
-    <Grid Margin="28">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+
+    <Grid Margin="28,24,28,28">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Ведомости практик" Style="{StaticResource PageTitleText}"/>
+        <TextBlock Text="Ведомости практик" 
+                   Style="{StaticResource PageTitleText}" Margin="0 0 0 12"/>
 
         <!-- Action Bar -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="16">
-            <StackPanel Orientation="Horizontal">
-                <TextBox Width="380" Style="{StaticResource InputBox}"
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16" Padding="14,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <Button Content="Добавить ведомость" 
-                        Margin="20,0,0,0"
+                <TextBox Width="360" HorizontalAlignment="Left"
+                         Style="{StaticResource InputBox}"
+                         Margin="0 0 12 0"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="Поиск по типу, модулю, преподавателю, группе"/>
+
+                <Button Grid.Column="1"
+                        Content="＋  Добавить ведомость"
                         Style="{StaticResource PrimaryButton}"
                         Command="{Binding OpenAddCommand}"
-                        Visibility="{Binding CanManagePractices, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            </StackPanel>
+                        Visibility="{Binding CanManagePractices,
+                                    Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </Grid>
         </Border>
 
-        <!-- Табличный список с кнопками действий -->
-        <ListView Grid.Row="2" ItemsSource="{Binding Practices}"
-                  Background="{StaticResource PrimaryBrush}"
-                  BorderThickness="0">
+        <!-- DataGrid -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
+            <DataGrid ItemsSource="{Binding Practices}"
+                      Style="{StaticResource ModernDataGrid}"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                      ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                      CellStyle="{StaticResource DataGridCellStyle}"
+                      x:Name="PracticesGrid">
 
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Тип практики" Width="220" DisplayMemberBinding="{Binding PracticeType}"/>
-                    <GridViewColumn Header="Модуль" Width="200" DisplayMemberBinding="{Binding ModuleName}"/>
-                    <GridViewColumn Header="Группа" Width="110" DisplayMemberBinding="{Binding Group}"/>
-                    <GridViewColumn Header="Преподаватель" Width="180" DisplayMemberBinding="{Binding TeacherName}"/>
-                    <GridViewColumn Header="Начало" Width="100" DisplayMemberBinding="{Binding Start, StringFormat=dd.MM.yyyy}"/>
-                    <GridViewColumn Header="Окончание" Width="100" DisplayMemberBinding="{Binding End, StringFormat=dd.MM.yyyy}"/>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRowStyle}">
+                        <!-- Двойной клик для редактирования (обработчик в code-behind: DataGridRow_MouseDoubleClick) -->
+                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                    </Style>
+                </DataGrid.RowStyle>
 
-                    <!-- Колонка с действиями -->
-                    <GridViewColumn Header="Действия" Width="140">
-                        <GridViewColumn.CellTemplate>
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Тип практики"
+                                        Binding="{Binding PracticeType}"
+                                        Width="Auto"/>
+
+                    <DataGridTextColumn Header="Модуль"
+                                        Binding="{Binding ModuleName}"
+                                        Width="Auto"/>
+
+                    <DataGridTextColumn Header="Группа"
+                                        Binding="{Binding Group}"
+                                        Width="Auto"/>
+
+                    <DataGridTextColumn Header="Преподаватель"
+                                        Binding="{Binding TeacherName}"
+                                        Width="Auto"/>
+
+                    <DataGridTextColumn Header="Начало"
+                                        Binding="{Binding Start, StringFormat=dd.MM.yyyy}"
+                                        Width="Auto"/>
+
+                    <DataGridTextColumn Header="Окончание"
+                                        Binding="{Binding End, StringFormat=dd.MM.yyyy}"
+                                        Width="Auto"/>
+
+                    <!-- Колонка действий -->
+                    <DataGridTemplateColumn Header="Действия" Width="160" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <!-- Кнопка Изменить -->
-                                    <Button Content="Изменить" 
-                                            Style="{StaticResource SecondaryButton}"
-                                            Padding="8,4"
-                                            Margin="0,0,6,0"
-                                            Visibility="{Binding DataContext.CanManagePractices, 
-                                                        RelativeSource={RelativeSource AncestorType=ListView}, 
-                                                        Converter={StaticResource BoolToVisibilityConverter}}"
-                                            Command="{Binding DataContext.EditCommand, 
-                                                     RelativeSource={RelativeSource AncestorType=ListView}}"
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                            Visibility="{Binding DataContext.CanManagePractices,
+                                                         RelativeSource={RelativeSource AncestorType=DataGrid},
+                                                         Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                    <Button Content="✏"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="8,5" FontSize="14"
+                                            ToolTip="Редактировать"
+                                            Command="{Binding DataContext.EditCommand,
+                                                      RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
 
-                                    <!-- Кнопка Удалить -->
-                                    <Button Content="Удалить" 
-                                            Style="{StaticResource GhostButton}"
-                                            Padding="8,4"
-                                            Visibility="{Binding DataContext.CanManagePractices, 
-                                                        RelativeSource={RelativeSource AncestorType=ListView}, 
-                                                        Converter={StaticResource BoolToVisibilityConverter}}"
-                                            Command="{Binding DataContext.DeleteCommand, 
-                                                     RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    <Button Content="🗑"
+                                            Style="{StaticResource DangerButton}"
+                                            Padding="8,5" FontSize="14"
+                                            ToolTip="Удалить"
+                                            Command="{Binding DataContext.DeleteCommand,
+                                                      RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>
                             </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-
-            <!-- Двойной клик для редактирования -->
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </Grid>
 </Page>

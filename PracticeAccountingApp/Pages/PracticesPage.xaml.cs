@@ -13,9 +13,9 @@ namespace PracticeAccountingApp.Pages
             DataContext = new PracticesViewModel();
         }
 
-        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (sender is ListViewItem item && item.DataContext is PracticeVm practice)
+            if (sender is DataGridRow row && row.DataContext is PracticeVm practice)
             {
                 var vm = (PracticesViewModel)DataContext;
                 vm.Edit(practice);

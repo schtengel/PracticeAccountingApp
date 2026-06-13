@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore;
-using PracticeAccountingApp.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -42,7 +40,7 @@ public partial class HomeViewModel : BaseViewModel
             .Include(s => s.Teacher)
             .OrderByDescending(x => x.PracticeSheetId)
             .Take(6)
-            .AsNoTracking()                    // важно для производительности
+            .AsNoTracking()
             .ToList();
 
         foreach (var sheet in lastSheets)
@@ -81,30 +79,49 @@ public partial class HomeViewModel : BaseViewModel
         }
 
         // -------------------------
-        // 3. Последние действия
+        // 3. Последние действия — объединяем студентов и ведомости в один
+        //    список и сортируем по ID (прокси для времени создания).
+        //    Тип действия кодируем в знаке: студенты → чётные, ведомости → нечётные,
+        //    затем сортируем по убыванию суррогатного ключа.
         // -------------------------
-        var lastStudents = Db.Context.Students
+        var recentStudents = Db.Context.Students
             .OrderByDescending(x => x.StudentId)
-            .Take(3)
+            .Take(5)
+            .Select(s => new ActionItem
+            {
+                SortKey = s.StudentId * 2,      // чётный суррогат
+                Text = $"Добавлен студент: {s.FullName}"
+            })
             .AsNoTracking()
             .ToList();
 
-        foreach (var s in lastStudents)
-        {
-            LastActions.Add($"Добавлен студент: {s.FullName}");
-        }
-
-        var lastSheetsShort = Db.Context.PracticeSheets
+        var recentSheets = Db.Context.PracticeSheets
             .Include(s => s.PracticeType)
             .OrderByDescending(x => x.PracticeSheetId)
-            .Take(3)
+            .Take(5)
             .AsNoTracking()
-            .ToList();
+            .ToList()
+            .Select(s => new ActionItem
+            {
+                SortKey = s.PracticeSheetId * 2 + 1,   // нечётный суррогат
+                Text = $"Создана ведомость: {s.PracticeType?.PracticeTypeName ?? "—"} ({s.GroupNumber})"
+            });
 
-        foreach (var s in lastSheetsShort)
-        {
-            LastActions.Add($"Создана ведомость: {s.PracticeType?.PracticeTypeName ?? "—"}");
-        }
+        // Объединяем и берём 6 самых свежих записей
+        var combined = recentStudents
+            .Concat(recentSheets)
+            .OrderByDescending(x => x.SortKey)
+            .Take(6);
+
+        foreach (var action in combined)
+            LastActions.Add(action.Text);
+    }
+
+    // Вспомогательный тип — не нужен снаружи, поэтому приватный
+    private class ActionItem
+    {
+        public int SortKey { get; init; }
+        public string Text { get; init; } = "";
     }
 }
 

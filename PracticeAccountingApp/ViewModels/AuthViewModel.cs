@@ -11,14 +11,9 @@ namespace PracticeAccountingApp.ViewModels;
 
 public partial class AuthViewModel : BaseViewModel
 {
-    [ObservableProperty]
-    private string? login;
-
-    [ObservableProperty]
-    private string errorMessage = "";
-
-    [ObservableProperty]
-    private bool isLoading = false;
+    [ObservableProperty] private string? login;
+    [ObservableProperty] private string errorMessage = "";
+    [ObservableProperty] private bool isLoading = false;
 
     [RelayCommand]
     private async Task LoginUser(PasswordBox passwordBox)
@@ -34,12 +29,15 @@ public partial class AuthViewModel : BaseViewModel
             return;
         }
 
-        // Имитация задержки сети + плавность
         await Task.Delay(400);
 
-        User? user = Db.Context.Users
-            .Include(u => u.Role)
-            .FirstOrDefault(u => u.Login == Login);
+        User? user;
+        await using (var ctx = Db.CreateContext())
+        {
+            user = await ctx.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Login == Login);
+        }
 
         if (user == null || !PasswordHelper.VerifyPassword(password, user.PasswordHash))
         {
@@ -48,30 +46,25 @@ public partial class AuthViewModel : BaseViewModel
             return;
         }
 
-        // Успешный вход
-        ErrorMessage = "";
-        await ShowSuccessAnimation();
+        // Устанавливаем сессию ДО открытия MainWindow,
+        // чтобы страницы при инициализации уже видели роль.
+        AppSession.CurrentUser = user;
 
+        ErrorMessage = "";
         OpenMainWindow(user);
     }
 
     [RelayCommand]
     private void LoginAsGuest()
     {
+        AppSession.CurrentUser = null;
         ErrorMessage = "";
         OpenMainWindow(null);
     }
 
-    private async Task ShowSuccessAnimation()
-    {
-        // Здесь можно добавить логику анимации через событие или Messenger,
-        // но для простоты просто небольшая задержка + сообщение
-        // (анимацию сделаем в XAML)
-    }
-
     private static void OpenMainWindow(User? user)
     {
-        MainWindow mainWindow = new(new MainViewModel(user));
+        var mainWindow = new MainWindow(new MainViewModel(user));
         mainWindow.Show();
 
         Application.Current.Windows

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
-using PracticeAccountingApp.Models;
 using PracticeAccountingApp.Views.DialogWindows;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,10 +22,12 @@ public partial class GroupsViewModel : BaseViewModel
         Groups.Clear();
 
         var data = Db.Context.Groups
+            .OrderBy(g => g.GroupNumber)
             .Select(g => new GroupVm
             {
                 GroupNumber = g.GroupNumber,
                 Specialization = g.Specialization,
+                Course = g.Course,
                 StudentsCount = g.Students.Count
             })
             .ToList();
@@ -56,34 +57,51 @@ public partial class GroupsViewModel : BaseViewModel
     [RelayCommand]
     public void Delete(GroupVm vm)
     {
-        if (MessageBox.Show($"Удалить группу {vm.GroupNumber} и всех её студентов?\n\nЭто действие нельзя отменить.",
+        if (vm == null) return;
+
+        if (MessageBox.Show(
+                $"Удалить группу {vm.GroupNumber} и всех её студентов?\n\nЭто действие нельзя отменить.",
                 "Подтверждение удаления",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning) != MessageBoxResult.Yes)
             return;
 
-        var group = Db.Context.Groups
-            .Include(g => g.Students)
-            .FirstOrDefault(g => g.GroupNumber == vm.GroupNumber);
+        try
+        {
+            var group = Db.Context.Groups
+                .Include(g => g.Students)
+                .Include(g => g.PracticeSheets)
+                    .ThenInclude(ps => ps.StudentReports)
+                .FirstOrDefault(g => g.GroupNumber == vm.GroupNumber);
 
-        if (group == null) return;
+            if (group == null) return;
 
-        Db.Context.Groups.Remove(group);
-        Db.Context.SaveChanges();
-        Load();
+            // Удаляем StudentReports → PracticeSheets → Students → Group
+            // именно в таком порядке, иначе FK-ограничения выбросят исключение.
+            foreach (var sheet in group.PracticeSheets)
+                Db.Context.StudentReports.RemoveRange(sheet.StudentReports);
+
+            Db.Context.PracticeSheets.RemoveRange(group.PracticeSheets);
+            Db.Context.Students.RemoveRange(group.Students);
+            Db.Context.Groups.Remove(group);
+
+            Db.Context.SaveChanges();
+            Groups.Remove(vm);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
-    // Права доступа
-    public bool CanManageGroupsAndStudents =>
-        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManageGroupsAndStudents;
-
-    public bool CanManagePractices =>
-        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
+    // CanManageGroupsAndStudents и CanManagePractices унаследованы из BaseViewModel.
 }
 
 public class GroupVm
 {
     public string GroupNumber { get; set; } = "";
     public string Specialization { get; set; } = "";
+    public byte Course { get; set; }
     public int StudentsCount { get; set; }
 }

@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PracticeAccountingApp.Models;
 using PracticeAccountingApp.Views.DialogWindows;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace PracticeAccountingApp.ViewModels;
@@ -24,7 +24,7 @@ public partial class StudentsViewModel : BaseViewModel
             Interval = TimeSpan.FromMilliseconds(300)
         };
 
-        _searchTimer.Tick += (_, __) =>
+        _searchTimer.Tick += (_, _) =>
         {
             _searchTimer.Stop();
             Load();
@@ -47,7 +47,10 @@ public partial class StudentsViewModel : BaseViewModel
 
         if (!string.IsNullOrWhiteSpace(SearchText))
         {
-            query = query.Where(s => s.FullName.Contains(SearchText));
+            // Поиск и по ФИО, и по номеру группы
+            query = query.Where(s =>
+                s.FullName.Contains(SearchText) ||
+                s.GroupNumber.Contains(SearchText));
         }
 
         var data = query
@@ -58,6 +61,7 @@ public partial class StudentsViewModel : BaseViewModel
                 Group = s.GroupNumber,
                 BirthDate = s.BirthDate
             })
+            .OrderBy(s => s.FullName)
             .ToList();
 
         foreach (var item in data)
@@ -67,15 +71,30 @@ public partial class StudentsViewModel : BaseViewModel
     [RelayCommand]
     private void Delete(StudentVm student)
     {
-        var entity = Db.Context.Students
-            .FirstOrDefault(x => x.StudentId == student.Id);
+        if (student == null) return;
 
-        if (entity == null) return;
+        if (MessageBox.Show(
+                $"Удалить студента {student.FullName}?",
+                "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            return;
 
-        Db.Context.Students.Remove(entity);
-        Db.Context.SaveChanges();
+        try
+        {
+            var entity = Db.Context.Students
+                .FirstOrDefault(x => x.StudentId == student.Id);
 
-        Students.Remove(student);
+            if (entity == null) return;
+
+            Db.Context.Students.Remove(entity);
+            Db.Context.SaveChanges();
+
+            Students.Remove(student);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     [RelayCommand]
@@ -83,7 +102,6 @@ public partial class StudentsViewModel : BaseViewModel
     {
         var win = new StudentEditWindow(null);
         win.ShowDialog();
-
         Load();
     }
 
@@ -92,16 +110,10 @@ public partial class StudentsViewModel : BaseViewModel
     {
         var win = new StudentEditWindow(student.Id);
         win.ShowDialog();
-
         Load();
     }
 
-    // Права доступа
-    public bool CanManageGroupsAndStudents =>
-        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManageGroupsAndStudents;
-
-    public bool CanManagePractices =>
-        App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
+    // CanManageGroupsAndStudents и CanManagePractices унаследованы из BaseViewModel.
 }
 
 public class StudentVm

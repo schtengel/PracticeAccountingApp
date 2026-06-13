@@ -16,6 +16,8 @@ public partial class GroupEditViewModel : BaseViewModel
     [ObservableProperty] private string specialization = "";
     [ObservableProperty] private byte course = 1;
 
+    public bool IsNewGroup => _originalGroupNumber == null;
+
     public ObservableCollection<byte> AvailableCourses { get; } = new();
     public ObservableCollection<Student> StudentsInGroup { get; } = new();
 
@@ -23,47 +25,50 @@ public partial class GroupEditViewModel : BaseViewModel
     {
         _originalGroupNumber = groupNumberToEdit;
 
-        // Курсы от 1 до 6
-        for (byte i = 1; i <= 6; i++)
+        for (byte i = 1; i <= 4 ; i++)
             AvailableCourses.Add(i);
 
         if (!string.IsNullOrEmpty(groupNumberToEdit))
-        {
             LoadExistingGroup(groupNumberToEdit);
-        }
     }
 
-    private void LoadExistingGroup(string groupNumber)
+    private void LoadExistingGroup(string number)
     {
         var group = Db.Context.Groups
             .Include(g => g.Students)
-            .FirstOrDefault(g => g.GroupNumber == groupNumber);
+            .FirstOrDefault(g => g.GroupNumber == number);
 
-        if (group != null)
-        {
-            GroupNumber = group.GroupNumber;
-            Specialization = group.Specialization;
-            Course = group.Course;
+        if (group == null) return;
 
-            StudentsInGroup.Clear();
-            foreach (var s in group.Students.OrderBy(s => s.FullName))
-            {
-                StudentsInGroup.Add(s);
-            }
-        }
+        GroupNumber = group.GroupNumber;
+        Specialization = group.Specialization;
+        Course = group.Course;
+
+        StudentsInGroup.Clear();
+        foreach (var s in group.Students.OrderBy(s => s.FullName))
+            StudentsInGroup.Add(s);
     }
 
     private bool IsValid()
     {
-        if (string.IsNullOrWhiteSpace(GroupNumber) || string.IsNullOrWhiteSpace(Specialization))
+        if (string.IsNullOrWhiteSpace(GroupNumber))
         {
-            MessageBox.Show("Номер группы и специальность обязательны!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Номер группы обязателен!", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
         if (GroupNumber.Length > 8)
         {
-            MessageBox.Show("Номер группы не может быть длиннее 8 символов", "Ошибка");
+            MessageBox.Show("Номер группы не может быть длиннее 8 символов", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(Specialization))
+        {
+            MessageBox.Show("Специальность обязательна!", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
@@ -79,36 +84,33 @@ public partial class GroupEditViewModel : BaseViewModel
         {
             if (_originalGroupNumber == null)
             {
-                // Создание
-                if (Db.Context.Groups.Any(g => g.GroupNumber == GroupNumber.Trim().ToUpper()))
+                // Создание новой группы
+                var normalized = GroupNumber.Trim().ToUpper();
+
+                if (Db.Context.Groups.Any(g => g.GroupNumber == normalized))
                 {
-                    MessageBox.Show("Группа с таким номером уже существует!", "Ошибка");
+                    MessageBox.Show("Группа с таким номером уже существует!", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                var newGroup = new Group
+                Db.Context.Groups.Add(new Group
                 {
-                    GroupNumber = GroupNumber.Trim().ToUpper(),
+                    GroupNumber = normalized,
                     Specialization = Specialization.Trim(),
                     Course = Course
-                };
-
-                Db.Context.Groups.Add(newGroup);
+                });
             }
             else
             {
-                // Редактирование
-                var group = Db.Context.Groups.FirstOrDefault(g => g.GroupNumber == _originalGroupNumber);
+                // Редактирование — GroupNumber НЕ меняем, так как это первичный ключ.
+                // EF Core не поддерживает обновление PK через SaveChanges.
+                // Поле заблокировано в XAML через IsNewGroup.
+                var group = Db.Context.Groups
+                    .FirstOrDefault(g => g.GroupNumber == _originalGroupNumber);
+
                 if (group == null) return;
 
-                if (group.GroupNumber != GroupNumber.Trim().ToUpper() &&
-                    Db.Context.Groups.Any(g => g.GroupNumber == GroupNumber.Trim().ToUpper()))
-                {
-                    MessageBox.Show("Группа с таким номером уже существует!", "Ошибка");
-                    return;
-                }
-
-                group.GroupNumber = GroupNumber.Trim().ToUpper();
                 group.Specialization = Specialization.Trim();
                 group.Course = Course;
             }
@@ -118,7 +120,8 @@ public partial class GroupEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

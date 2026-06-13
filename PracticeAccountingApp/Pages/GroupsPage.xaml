@@ -3,78 +3,123 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Background="{StaticResource PrimaryBrush}">
 
-    <Grid Margin="28">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+
+    <Grid Margin="28,24,28,28">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Группы" Style="{StaticResource PageTitleText}"/>
+        <TextBlock Text="Группы" Style="{StaticResource PageTitleText}" 
+                   Margin="0 0 0 12"/>
 
-        <!-- Панель действий -->
-        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="16">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Добавить группу" 
+        <!-- Action Bar -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,16" Padding="14,12">
+            <Grid>
+                <TextBlock Text="{Binding Groups.Count, StringFormat='Всего групп: {0}'}"
+                           FontSize="14"
+                           Foreground="{StaticResource MutedTextBrush}"
+                           VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1" HorizontalAlignment="Right"
+                        Content="＋  Добавить группу"
                         Style="{StaticResource PrimaryButton}"
                         Command="{Binding OpenAddCommand}"
-                        Visibility="{Binding CanManageGroupsAndStudents, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            </StackPanel>
+                        Visibility="{Binding CanManageGroupsAndStudents,
+                                    Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </Grid>
         </Border>
 
-        <!-- Карточки групп -->
-        <ListView Grid.Row="2" ItemsSource="{Binding Groups}"
-                  Background="Transparent" BorderThickness="0"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <!-- Cards -->
+        <ListView Grid.Row="2"
+          ItemsSource="{Binding Groups}"
+          Background="Transparent"
+          BorderThickness="0"
+          ScrollViewer.VerticalScrollBarVisibility="Auto"
+          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
 
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="10"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                </Style>
-            </ListView.ItemContainerStyle>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="0,0,14,14"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="360" Height="175" Style="{StaticResource CardStyle}" Padding="18">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="370" Style="{StaticResource CardStyle}"
+                                Padding="18" Margin="0" Cursor="Hand">
+                            <StackPanel>
+                                <!-- Заголовок: номер + курс -->
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding GroupNumber}"
+                                               FontSize="20" FontWeight="Bold"
+                                               Foreground="{StaticResource AccentBrush}"/>
+                                    <Border HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            Style="{StaticResource BadgeStyle}">
+                                        <TextBlock Text="{Binding Course, StringFormat='{}{0} курс'}"
+                                                   Style="{StaticResource BadgeText}"/>
+                                    </Border>
+                                </Grid>
 
-                            <TextBlock Text="{Binding GroupNumber}" FontSize="18" FontWeight="SemiBold"
-                                       Foreground="{StaticResource AccentBrush}"/>
-                            <TextBlock Grid.Row="1" Text="{Binding Specialization}" 
-                                       Foreground="{StaticResource TextBrush}" Margin="0,6,0,4"/>
-                            <TextBlock Grid.Row="2" Text="{Binding StudentsCount, StringFormat='Студентов: {0}'}"
-                                       Foreground="{StaticResource MutedTextBrush}"/>
+                                <!-- Специальность -->
+                                <TextBlock Text="{Binding Specialization}"
+                                           FontSize="14"
+                                           Foreground="{StaticResource TextBrush}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
 
-                            <!-- Кнопка Удалить (только для Админа) -->
-                            <Button Grid.Row="3" Content="🗑" 
-                                    Style="{StaticResource GhostButton}"
-                                    FontSize="18"
-                                    Width="32" Height="32"
-                                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                    Visibility="{Binding DataContext.CanManageGroupsAndStudents, 
-                                                RelativeSource={RelativeSource AncestorType=ListView}, 
-                                                Converter={StaticResource BoolToVisibilityConverter}}"
-                                    Command="{Binding DataContext.DeleteCommand, 
-                                             RelativeSource={RelativeSource AncestorType=ListView}}"
-                                    CommandParameter="{Binding}"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                                <!-- Студентов -->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="👤 " FontSize="13"/>
+                                    <TextBlock Text="{Binding StudentsCount, StringFormat='{}{0} студентов'}"
+                                               FontSize="13"
+                                               Foreground="{StaticResource MutedTextBrush}"/>
+                                </StackPanel>
+
+                                <!-- Разделитель -->
+                                <Border Height="1" Margin="0,12,0,10"
+                                        Background="{StaticResource DividerBrush}"/>
+
+                                <!-- Действия -->
+                                <Grid Visibility="{Binding DataContext.CanManageGroupsAndStudents,
+                                                   RelativeSource={RelativeSource AncestorType=ListView},
+                                                   Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Button Content="✏ Изменить"
+                                            HorizontalAlignment="Left"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="8,5" FontSize="13"
+                                            Command="{Binding DataContext.EditCommand,
+                                                      RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"/>
+
+                                    <Button Content="🗑 Удалить"
+                                            HorizontalAlignment="Right"
+                                            Style="{StaticResource DangerButton}"
+                                            Padding="8,5" FontSize="13"
+                                            Command="{Binding DataContext.DeleteCommand,
+                                                      RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
     </Grid>
 </Page>

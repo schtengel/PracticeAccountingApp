@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
-using PracticeAccountingApp.Models;
 using PracticeAccountingApp.Views.DialogWindows;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,7 +21,7 @@ public partial class PracticesViewModel : BaseViewModel
     public PracticesViewModel()
     {
         _searchTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
-        _searchTimer.Tick += (_, __) => { _searchTimer.Stop(); Load(); };
+        _searchTimer.Tick += (_, _) => { _searchTimer.Stop(); Load(); };
 
         Load();
     }
@@ -70,7 +69,7 @@ public partial class PracticesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void OpenAdd()         
+    public void OpenAdd()
     {
         var win = new PracticeEditWindow(null);
         win.ShowDialog();
@@ -78,7 +77,7 @@ public partial class PracticesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void Edit(PracticeVm vm)   
+    public void Edit(PracticeVm vm)
     {
         if (vm == null) return;
 
@@ -88,24 +87,42 @@ public partial class PracticesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    public void Delete(PracticeVm vm)  
+    public void Delete(PracticeVm vm)
     {
         if (vm == null) return;
 
-        if (MessageBox.Show($"Удалить ведомость для группы {vm.Group}?",
+        if (MessageBox.Show(
+                $"Удалить ведомость для группы {vm.Group}?\nВсе связанные отчёты студентов также будут удалены.",
                 "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
             return;
 
-        var entity = Db.Context.PracticeSheets.FirstOrDefault(x => x.PracticeSheetId == vm.Id);
-        if (entity == null) return;
+        try
+        {
+            var entity = Db.Context.PracticeSheets
+                .FirstOrDefault(x => x.PracticeSheetId == vm.Id);
 
-        Db.Context.PracticeSheets.Remove(entity);
-        Db.Context.SaveChanges();
-        Practices.Remove(vm);
+            if (entity == null) return;
+
+            // Сначала удаляем дочерние записи — без этого вылетит FK-исключение,
+            // если в БД не настроен CASCADE DELETE.
+            var reports = Db.Context.StudentReports
+                .Where(r => r.PracticeSheetId == vm.Id)
+                .ToList();
+
+            Db.Context.StudentReports.RemoveRange(reports);
+            Db.Context.PracticeSheets.Remove(entity);
+            Db.Context.SaveChanges();
+
+            Practices.Remove(vm);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
-    public bool CanManagePractices =>
-    App.Current.MainWindow?.DataContext is MainViewModel mvm && mvm.CanManagePractices;
+    // CanManagePractices унаследован из BaseViewModel — дублирование устранено.
 }
 
 public class PracticeVm

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PracticeAccountingApp.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -27,7 +26,6 @@ public partial class StudentEditViewModel : BaseViewModel
     public StudentEditViewModel(int? id)
     {
         _id = id;
-
         LoadGroups();
 
         if (id != null)
@@ -46,6 +44,7 @@ public partial class StudentEditViewModel : BaseViewModel
 
         var groups = Db.Context.Groups
             .Select(g => g.GroupNumber)
+            .OrderBy(g => g)       // в оригинале не было сортировки
             .ToList();
 
         foreach (var g in groups)
@@ -55,18 +54,35 @@ public partial class StudentEditViewModel : BaseViewModel
     private bool IsValid()
     {
         if (string.IsNullOrWhiteSpace(FullName))
+        {
+            MessageBox.Show("Введите ФИО студента", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
+        }
 
         if (string.IsNullOrWhiteSpace(Group))
+        {
+            MessageBox.Show("Выберите группу", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
+        }
 
         if (!DateOnly.TryParseExact(
-                BirthDateString,
-                "dd.MM.yyyy",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out _))
+                BirthDateString, "dd.MM.yyyy",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+        {
+            MessageBox.Show("Неверный формат даты рождения (дд.мм.гггг)", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
+        }
+
+        // Базовая проверка на адекватность даты
+        if (date.Year < 1900 || date > DateOnly.FromDateTime(DateTime.Today))
+        {
+            MessageBox.Show("Дата рождения не может быть в будущем или слишком далеко в прошлом", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
 
         return true;
     }
@@ -74,34 +90,37 @@ public partial class StudentEditViewModel : BaseViewModel
     [RelayCommand]
     private void Save(Window window)
     {
-        if (!IsValid())
-        {
-            MessageBox.Show("Ошибка ввода данных");
-            return;
-        }
+        if (!IsValid()) return;
 
-        var date = DateOnly.ParseExact(BirthDateString, "dd.MM.yyyy");
+        var date = DateOnly.ParseExact(BirthDateString, "dd.MM.yyyy", CultureInfo.InvariantCulture);
 
-        if (_id == null)
+        try
         {
-            Db.Context.Students.Add(new Student
+            if (_id == null)
             {
-                FullName = FullName,
-                GroupNumber = Group,
-                BirthDate = date
-            });
+                Db.Context.Students.Add(new Student
+                {
+                    FullName = FullName.Trim(),
+                    GroupNumber = Group,
+                    BirthDate = date
+                });
+            }
+            else
+            {
+                var s = Db.Context.Students.First(x => x.StudentId == _id);
+
+                s.FullName = FullName.Trim();
+                s.GroupNumber = Group;
+                s.BirthDate = date;
+            }
+
+            Db.Context.SaveChanges();
+            window?.Close();
         }
-        else
+        catch (Exception ex)
         {
-            var s = Db.Context.Students.First(x => x.StudentId == _id);
-
-            s.FullName = FullName;
-            s.GroupNumber = Group;
-            s.BirthDate = date;
+            MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
-        Db.Context.SaveChanges();
-
-        window?.Close();
     }
 }

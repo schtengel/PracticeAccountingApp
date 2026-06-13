@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PracticeAccountingApp.Models;
-using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
@@ -18,35 +18,74 @@ public partial class CreateUserViewModel : BaseViewModel
     [ObservableProperty]
     private Role? selectedRole;
 
+    // Коллекция для ComboBox ролей — в оригинале отсутствовала,
+    // поэтому выпадающий список был пустым.
+    public ObservableCollection<Role> Roles { get; } = new();
+
+    public CreateUserViewModel()
+    {
+        LoadRoles();
+    }
+
+    private void LoadRoles()
+    {
+        Roles.Clear();
+        foreach (var role in Db.Context.Roles.OrderBy(r => r.RoleName))
+            Roles.Add(role);
+    }
+
     [RelayCommand]
     private void CreateUser()
     {
-        if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password) || SelectedRole == null)
+        if (string.IsNullOrWhiteSpace(Login))
         {
-            MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Введите логин", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        if (Db.Context.Users.Any(u => u.Login == Login))
+        if (string.IsNullOrWhiteSpace(Password))
         {
-            MessageBox.Show("Пользователь с таким логином уже существует");
+            MessageBox.Show("Введите пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        var user = new User
+        if (SelectedRole == null)
         {
-            Login = Login.Trim(),
-            PasswordHash = PasswordHelper.HashPassword(Password),
-            RoleId = SelectedRole.RoleId,
-            RegistrationDate = DateTime.Now
-        };
+            MessageBox.Show("Выберите роль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
 
-        Db.Context.Users.Add(user);
-        Db.Context.SaveChanges();
+        if (Db.Context.Users.Any(u => u.Login == Login.Trim()))
+        {
+            MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
 
-        MessageBox.Show("Пользователь создан успешно");
-        // очистка полей
-        Login = Password = "";
-        SelectedRole = null;
+        try
+        {
+            var user = new User
+            {
+                Login = Login.Trim(),
+                PasswordHash = PasswordHelper.HashPassword(Password),
+                RoleId = SelectedRole.RoleId,
+                RegistrationDate = DateTime.Now
+            };
+
+            Db.Context.Users.Add(user);
+            Db.Context.SaveChanges();
+
+            MessageBox.Show("Пользователь создан успешно", "Готово",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+
+            Login = "";
+            Password = "";
+            SelectedRole = null;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при создании пользователя: {ex.Message}", "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

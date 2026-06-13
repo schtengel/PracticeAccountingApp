@@ -73,18 +73,45 @@ public partial class StudentsViewModel : BaseViewModel
     {
         if (student == null) return;
 
+        var entity = Db.Context.Students
+            .FirstOrDefault(x => x.StudentId == student.Id);
+
+        if (entity == null) return;
+
+        // 1. проверка зависимостей
+        var reportsCount = Db.Context.StudentReports
+            .Count(r => r.StudentId == student.Id);
+
         if (MessageBox.Show(
-                $"Удалить студента {student.FullName}?",
-                "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                $"Удалить студента {student.FullName}?\n" +
+                $"Найдено отчетов: {reportsCount}",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes)
             return;
+
+        // 2. если есть отчеты — второе подтверждение
+        if (reportsCount > 0)
+        {
+            var secondConfirm = MessageBox.Show(
+                $"У студента есть {reportsCount} отчетов.\n" +
+                "Они будут УДАЛЕНЫ вместе со студентом.\n\nПродолжить?",
+                "Второе подтверждение",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Error);
+
+            if (secondConfirm != MessageBoxResult.Yes)
+                return;
+
+            // удаляем отчеты
+            var reports = Db.Context.StudentReports
+                .Where(r => r.StudentId == student.Id);
+
+            Db.Context.StudentReports.RemoveRange(reports);
+        }
 
         try
         {
-            var entity = Db.Context.Students
-                .FirstOrDefault(x => x.StudentId == student.Id);
-
-            if (entity == null) return;
-
             Db.Context.Students.Remove(entity);
             Db.Context.SaveChanges();
 
@@ -92,7 +119,7 @@ public partial class StudentsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка",
+            MessageBox.Show(ex.ToString(), "Ошибка удаления",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

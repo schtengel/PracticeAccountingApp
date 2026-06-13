@@ -34,8 +34,13 @@
             <TextBlock Text="Роль" Style="{StaticResource LabelText}" Margin="2,14,0,6"/>
             <ComboBox Style="{StaticResource ComboBoxInput}"
                       ItemsSource="{Binding Roles}"
-                      SelectedItem="{Binding SelectedRole}"
-                      DisplayMemberPath="RoleName"/>
+                      SelectedItem="{Binding SelectedRole}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding RoleName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Button Content="Создать пользователя"
                     Height="44" Margin="0,24,0,0"
